@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using vinylApp.Model;
+using vinylApp;
 
 namespace vinylApp.Repositories
 {
@@ -45,8 +46,7 @@ namespace vinylApp.Repositories
                     while (reader.Read())
                     {
                         int genreId = Convert.ToInt32(reader["GENRE ID"]);
-                        string genreName = reader
-                            ["GENRE_NAME"].ToString();
+                        string genreName = reader                       ["GENRE_NAME"].ToString();
                         genres.Add(new Genre(genreId, genreName));
                     }
                 }

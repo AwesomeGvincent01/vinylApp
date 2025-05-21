@@ -29,14 +29,32 @@ namespace vinylApp
                 case "1":
                     {
                         List<Genre> genres =
-                        storageManager.GetAllGenres();
+                        storageManager1.GetAllGenres();
                         view.DisplayGenres(genres);
                     }
+                    break;
+
+                case "2":
+                    UpdateGenreName();
+                    break;
+                case "3":
+                    InsertNewGenre();
+                    break;
+                case "4":
+                    DeleteGenreByName();
+                    break;
+                case "5":
+                     exit = true;
+                    
                     break;
                 default:
                     Console.WriteLine("Invalid option. Please try again");
                     break;
             }
+
+
+
+
         }
     }
 }
