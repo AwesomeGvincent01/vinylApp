@@ -1,10 +1,12 @@
-﻿using vinylApp.Repositories;
+﻿using vinylApp.Model;
+using vinylApp.Repositories;
+using vinylApp.View;
 
 namespace vinylApp
 {
     public class Program
     {
-        private static StorageManager storageManager;
+        private static StorageManager storageManager1;
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
@@ -18,7 +20,23 @@ namespace vinylApp
                 "Trust Server Certificate=False;Application " +
                 "Intent=ReadWrite;Multi Subnet Failover=False";
 
-            storageManager= new StorageManager(connectionString);
+            storageManager1 = new StorageManager(connectionString);
+            ConsoleView view = new ConsoleView();
+            string choice = view.DisplayMenu();
+
+            switch (choice)
+            {
+                case "1":
+                    {
+                        List<Genre> genres =
+                        storageManager.GetAllGenres();
+                        view.DisplayGenres(genres);
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Invalid option. Please try again");
+                    break;
+            }
         }
     }
 }
