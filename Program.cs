@@ -57,6 +57,7 @@ namespace vinylApp
                         Console.WriteLine("Invalid option.");
                         break;
                 }
+                storageManager1.CloseConnection();
             }
         }
 
@@ -76,8 +77,18 @@ namespace vinylApp
             string genreName = view.GetInput();
             int genreId = 0;
             Genre genre1 = new Genre(genreId, genreName);
-            int generatedId = storageManager1.InsertGenre(genreName);
+            int generatedId = storageManager1.InsertGenre(genre1);
             view.DisplayMessage($"New genre inserted with ID: {generatedId}");
         }
+
+        private static void DeleteGenreByName()
+        {
+            view.DisplayMessage("Enter the genre name to delete: ");
+            string genreName = view.GetInput();
+            int rowsAffected = storageManager1.DeleteGenreByName(genreName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
     }
 }

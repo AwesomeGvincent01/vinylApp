@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using vinylApp.Model;
 using vinylApp;
+using System.Data;
 
 namespace vinylApp.Repositories
 {
@@ -75,6 +76,24 @@ namespace vinylApp.Repositories
             {
                 cmd.Parameters.AddWithValue("@GenreName", genreTemp.GenreName);
                 return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
+        public int DeleteGenreByName(string genreName)
+        {
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Genre WHERE Name = @GenreName", conn))
+            {
+                cmd.Parameters.AddWithValue("@GenreName", genreName);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void CloseConnection()
+        {
+            if (conn != null && conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                Console.WriteLine("Connection closed");
             }
         }
 

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="C:\Users\ac148838\OneDrive - Avondale College\vinylAppLatest.cs" Link="vinylAppLatest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
   </ItemGroup>
