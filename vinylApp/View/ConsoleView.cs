@@ -9,7 +9,7 @@ namespace vinylApp.View
 {
     public class ConsoleView
     {
-        public string? DisplayMenu()
+        public string DisplayMenu()
         {
             Console.WriteLine("Welcome to my vinyl record");
             Console.WriteLine("Menu: ");
@@ -31,9 +31,29 @@ namespace vinylApp.View
                 Console.WriteLine($"{genre.GenreId}," +
                     $"{genre.GenreName}");
             }
+            foreach (Genre genre in genres)
             {
-                Console.WriteLine($"{genre.genreName}, {genre.genreName}");
+                Console.WriteLine($"{genre.GenreId}, {genre.GenreName}");
             }
+
+        }
+
+
+        public void DisplayMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
+        public string GetInput()
+        {
+            return Console.ReadLine();
+        }
+
+        public int GetIntInput()
+        {
+            return int.Parse(Console.ReadLine() );
         }
     }
 }
+
+
+

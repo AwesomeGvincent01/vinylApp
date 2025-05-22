@@ -7,9 +7,11 @@ namespace vinylApp
     public class Program
     {
         private static StorageManager storageManager1;
+        private static ConsoleView view;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("Hello, Earth!");
             string connectionString = "Data Source=" +
                 "(localdb)" +
                 "\\MSSQLLocalDB;Initial" +
@@ -21,40 +23,61 @@ namespace vinylApp
                 "Intent=ReadWrite;Multi Subnet Failover=False";
 
             storageManager1 = new StorageManager(connectionString);
-            ConsoleView view = new ConsoleView();
-            string choice = view.DisplayMenu();
+            view = new ConsoleView();
 
-            switch (choice)
+            while (true)
             {
-                case "1":
-                    {
-                        List<Genre> genres =
-                        storageManager1.GetAllGenres();
+                string choice = view.DisplayMenu();
+
+                switch (choice)
+                {
+                    case "1":
+                        List<Genre> genres = storageManager1.GetAllGenres();
                         view.DisplayGenres(genres);
-                    }
-                    break;
+                        break;
 
-                case "2":
-                    UpdateGenreName();
-                    break;
-                case "3":
-                    InsertNewGenre();
-                    break;
-                case "4":
-                    DeleteGenreByName();
-                    break;
-                case "5":
-                     exit = true;
-                    
-                    break;
-                default:
-                    Console.WriteLine("Invalid option. Please try again");
-                    break;
+                    case "2":
+                        UpdateGenreName();
+                        break;
+                    case "3":
+                         InsertNewGenre();
+                        break;
+                    case "4":
+                        // DeleteGenreByName();
+                        break;
+
+                    case "5":
+                        Console.WriteLine("Exiting program...");
+                        Console.ReadLine();
+
+                        return;
+
+
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
             }
+        }
 
+        private static void UpdateGenreName()
+        {
+            view.DisplayMessage("Enter the genre_id to update: ");
+            int genreId = view.GetIntInput();
+            view.DisplayMessage("Enter the new genre name");
+            string genreName = view.GetInput();
+            int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
 
-
-
+        private static void InsertNewGenre()
+        {
+            view.DisplayMessage("Enter the new genre name: ");
+            string genreName = view.GetInput();
+            int genreId = 0;
+            Genre genre1 = new Genre(genreId, genreName);
+            int generatedId = storageManager1.InsertGenre(genreName);
+            view.DisplayMessage($"New genre inserted with ID: {generatedId}");
         }
     }
 }

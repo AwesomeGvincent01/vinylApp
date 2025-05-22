@@ -37,7 +37,7 @@ namespace vinylApp.Repositories
         public List<Genre> GetAllGenres()
         {
             List<Genre> genres = new List<Genre>();
-            string sqlString = "SELECT * FROM Name.Genre";
+            string sqlString = "SELECT * FROM Genre";
 
             using (SqlCommand cmd = new SqlCommand(sqlString, conn))
             {
@@ -45,8 +45,8 @@ namespace vinylApp.Repositories
                 {
                     while (reader.Read())
                     {
-                        int genreId = Convert.ToInt32(reader["GENRE ID"]);
-                        string genreName = reader                       ["GENRE_NAME"].ToString();
+                        int genreId = Convert.ToInt32(reader["GenreID"]);
+                        string genreName = reader["Name"].ToString();
                         genres.Add(new Genre(genreId, genreName));
                     }
                 }
@@ -54,9 +54,31 @@ namespace vinylApp.Repositories
 
             return genres;
 
-            {
 
+        }
+
+        public int UpdateGenreName(int genreId, string genreName)
+        {
+            string sql = "UPDATE Genre SET Name = @GenreName WHERE GenreID = @GenreId";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@GenreName", genreName);
+                cmd.Parameters.AddWithValue("@GenreId", genreId);
+                return cmd.ExecuteNonQuery();
             }
         }
+
+        public int InsertGenre(Genre genreTemp)
+        {
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO Genre (Name) VALUES (@GenreName); SELECT SCOPE_IDENTITY();",
+                    conn))
+            {
+                cmd.Parameters.AddWithValue("@GenreName", genreTemp.GenreName);
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
+        
     }
 }
+    
