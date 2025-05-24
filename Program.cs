@@ -35,7 +35,7 @@ namespace vinylApp
                          InsertNewGenre();
                         break;
                     case "4":
-                        // DeleteGenreByName();
+                        DeleteGenreByName();
                         break;
 
                     case "5":
