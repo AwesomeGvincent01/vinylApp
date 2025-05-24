@@ -11,12 +11,15 @@ namespace vinylApp.View
     {
         public string DisplayMenu()
         {
+            Console.WriteLine(" ");
             Console.WriteLine("Welcome to my vinyl record");
+            Console.WriteLine("------------------------------- ");
             Console.WriteLine("Menu: ");
             Console.WriteLine("1. View All records in Genre");
             Console.WriteLine("2. Update genre name by genre_id");
-            Console.WriteLine("Insert a new genre");
-            Console.WriteLine("Delete a genre by genre_name");
+            Console.WriteLine("3. Insert a new genre");
+            Console.WriteLine("4. Delete a genre by genre_name");
+            Console.WriteLine("------------------------------- ");
             Console.WriteLine("Select an option: ");
 
             return Console.ReadLine();
