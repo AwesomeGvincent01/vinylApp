@@ -71,13 +71,19 @@ namespace vinylApp.Repositories
 
         public int InsertGenre(Genre genreTemp)
         {
-            using (SqlCommand cmd = new SqlCommand("INSERT INTO Genre (Name) VALUES (@GenreName); SELECT SCOPE_IDENTITY();",
-                    conn))
+            int newId = GetNextGenreId(); 
+
+            using (SqlCommand cmd =
+                   new SqlCommand("INSERT INTO Genre (GenreID, Name) VALUES (@Id, @Name);",
+                                  conn))
             {
-                cmd.Parameters.AddWithValue("@GenreName", genreTemp.GenreName);
-                return Convert.ToInt32(cmd.ExecuteScalar());
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@Name", genreTemp.GenreName);
+                cmd.ExecuteNonQuery();
+                return newId; 
             }
         }
+
 
         public int DeleteGenreByName(string genreName)
         {
@@ -87,7 +93,15 @@ namespace vinylApp.Repositories
                 return cmd.ExecuteNonQuery();
             }
         }
-        
+
+        private int GetNextGenreId()
+        {
+            using (SqlCommand cmd =
+                   new SqlCommand("SELECT ISNULL(MAX(GenreID),0)+1 FROM Genre", conn))
+            {
+                return (int)cmd.ExecuteScalar(); 
+            }
+        }
 
 
 
