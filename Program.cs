@@ -12,15 +12,7 @@ namespace vinylApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, Earth!");
-            string connectionString = "Data Source=" +
-                "(localdb)" +
-                "\\MSSQLLocalDB;Initial" +
-                " Catalog=vinylDB;" +
-                "Integrated " +
-                "Security=True;Connect " +
-                "Timeout=30;Encrypt=False;" +
-                "Trust Server Certificate=False;Application " +
-                "Intent=ReadWrite;Multi Subnet Failover=False";
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30";
 
             storageManager1 = new StorageManager(connectionString);
             view = new ConsoleView();
@@ -57,8 +49,9 @@ namespace vinylApp
                         Console.WriteLine("Invalid option.");
                         break;
                 }
-                storageManager1.CloseConnection();
+                
             }
+            storageManager1.CloseConnection();
         }
 
         private static void UpdateGenreName()
@@ -74,9 +67,9 @@ namespace vinylApp
         private static void InsertNewGenre()
         {
             view.DisplayMessage("Enter the new genre name: ");
+
             string genreName = view.GetInput();
-            int genreId = 0;
-            Genre genre1 = new Genre(genreId, genreName);
+            Genre genre1 = new Genre(0, genreName);
             int generatedId = storageManager1.InsertGenre(genre1);
             view.DisplayMessage($"New genre inserted with ID: {generatedId}");
         }

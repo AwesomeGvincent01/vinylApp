@@ -87,6 +87,10 @@ namespace vinylApp.Repositories
                 return cmd.ExecuteNonQuery();
             }
         }
+        
+
+
+
 
         public void CloseConnection()
         {
