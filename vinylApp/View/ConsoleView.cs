@@ -28,15 +28,10 @@ namespace vinylApp.View
         {
             foreach (Genre genre in genres)
             {
-                Console.WriteLine($"{genre.GenreId}," +
-                    $"{genre.GenreName}");
-            }
-            foreach (Genre genre in genres)
-            {
                 Console.WriteLine($"{genre.GenreId}, {genre.GenreName}");
             }
-
         }
+
 
 
         public void DisplayMessage(string message)
