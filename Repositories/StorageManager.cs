@@ -106,6 +106,64 @@ namespace vinylApp.Repositories
 
 
 
+
+        //test
+
+        public List<Customer> GetAllCustomers()
+        {
+            List<Customer> genres = new List<Customer>();
+            string sqlString = "SELECT * FROM Customer";
+
+            using (SqlCommand cmd = new SqlCommand(sqlString, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int customerId = Convert.ToInt32(reader["CustomerID"]);
+                        string customerName = reader["FirstName"].ToString();
+                        customers.Add(new Customer(customerId, customerName));
+                    }
+                }
+            }
+
+            return customers;
+
+
+        }
+
+        public int UpdateCustomerName(int genreId, string genreName)
+        {
+            string sql = "UPDATE Customer SET Name = @CustomerName WHERE CustomerID = @CustomerId";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                cmd.Parameters.AddWithValue("@CustomerId", customerId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int InsertCustomer(Genre genreTemp)
+        {
+            int newId = GetNextCustomerId();
+
+            using (SqlCommand cmd =
+                   new SqlCommand("INSERT INTO Customer (CustomerID, FirstName) VALUES (@CustomerID, @FirstName);",
+                                  conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerID", newId);
+                cmd.Parameters.AddWithValue("@FirstName", customerTemp.CustomerName);
+                cmd.ExecuteNonQuery();
+                return newId;
+            }
+        }
+
+
+        
+
+
+
+
         public void CloseConnection()
         {
             if (conn != null && conn.State == ConnectionState.Open)

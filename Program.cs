@@ -12,7 +12,7 @@ namespace vinylApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, Earth!");
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30";
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\ac148838\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30";
 
             storageManager1 = new StorageManager(connectionString);
             view = new ConsoleView();
@@ -39,6 +39,15 @@ namespace vinylApp
                         break;
 
                     case "5":
+                        List<Customer> customers = storageManager1.GetAllCustomers();
+                        view.DisplayCustomers(customers);
+                        break;
+
+                    case "6":
+                        UpdateCustomerName();
+                        break;
+
+                    case "7":
                         Console.WriteLine("Exiting program...");
                         Console.ReadLine();
 
@@ -83,5 +92,19 @@ namespace vinylApp
         }
 
 
-    }
+        private static void UpdateCustomerName()
+        {
+            view.DisplayMessage("Enter the customer_id to update: ");
+            int customerId = view.GetIntInput();
+            view.DisplayMessage("Enter the new customer name");
+            string customerName = view.GetInput();
+            int rowsAffected = storageManager1.UpdateCustomerName(customerId, customerName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+
+
+
+
+
+        }
 }
