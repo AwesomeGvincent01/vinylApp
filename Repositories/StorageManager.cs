@@ -162,12 +162,27 @@ namespace vinylApp.Repositories
 
         public int DeleteCustomerByName(string customerName)
         {
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Customer WHERE FirstName = @CustomerName", conn))
+            int customerId = GetCustomerIdByName(customerName);
+
+            if (customerId == -1)
             {
-                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                Console.WriteLine("Customer not found.");
+                return 0;
+            }
+
+            if (CustomerHasOrders(customerId))
+            {
+                Console.WriteLine("This customer cannot be deleted because they have existing orders.");
+                return 0;
+            }
+
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Customer WHERE CustomerID = @CustomerID", conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerID", customerId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
 
 
@@ -177,6 +192,36 @@ namespace vinylApp.Repositories
                    new SqlCommand("SELECT ISNULL(MAX(CustomerID),0)+1 FROM Customer", conn))
             {
                 return (int)cmd.ExecuteScalar();
+            }
+        }
+
+
+
+
+        public bool CustomerHasOrders(int customerId)
+        {
+            string sql = "SELECT COUNT(*) FROM [Order] WHERE CustomerID = @CustomerID";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerID", customerId);
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
+
+
+
+        public int GetCustomerIdByName(string name)
+        {
+            string sql = "SELECT CustomerID FROM Customer WHERE FirstName = @Name";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", name);
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : -1;
             }
         }
 
