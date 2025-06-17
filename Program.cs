@@ -52,6 +52,10 @@ namespace vinylApp
                         break;
 
                     case "8":
+                        DeleteCustomerByName();
+                        break;
+
+                    case "9":
                         Console.WriteLine("Exiting program...");
                         Console.ReadLine();
 
@@ -122,6 +126,15 @@ namespace vinylApp
             Customer customer1 = new Customer(0, customerName);
             int generatedId = storageManager1.InsertCustomer(customer1);
             view.DisplayMessage($"New customer inserted with ID: {generatedId}");
+        }
+
+
+        private static void DeleteCustomerByName()
+        {
+            view.DisplayMessage("Enter the customer name to delete: ");
+            string customerName = view.GetInput();
+            int rowsAffected = storageManager1.DeleteCustomerByName(customerName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
     }
 }

@@ -160,7 +160,14 @@ namespace vinylApp.Repositories
 
 
 
-
+        public int DeleteCustomerByName(string customerName)
+        {
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Customer WHERE FirstName = @CustomerName", conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                return cmd.ExecuteNonQuery();
+            }
+        }
 
 
 
