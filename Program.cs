@@ -48,6 +48,10 @@ namespace vinylApp
                         break;
 
                     case "7":
+                        InsertNewCustomer();
+                        break;
+
+                    case "8":
                         Console.WriteLine("Exiting program...");
                         Console.ReadLine();
 
@@ -106,6 +110,18 @@ namespace vinylApp
 
 
 
+        }
+
+
+
+        private static void InsertNewCustomer()
+        {
+            view.DisplayMessage("Enter the new customer name: ");
+
+            string customerName = view.GetInput();
+            Customer customer1 = new Customer(0, customerName);
+            int generatedId = storageManager1.InsertCustomer(customer1);
+            view.DisplayMessage($"New customer inserted with ID: {generatedId}");
         }
     }
 }

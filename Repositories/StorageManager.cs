@@ -143,23 +143,36 @@ namespace vinylApp.Repositories
             }
         }
 
-        /*public int InsertCustomer(Customer customertemp)
+       public int InsertCustomer(Customer customerTemp)
         {
             int newId = GetNextCustomerId();
 
             using (SqlCommand cmd =
-                   new SqlCommand("INSERT INTO Customer (CustomerID, FirstName) VALUES (@CustomerID, @FirstName);",
+                   new SqlCommand("INSERT INTO Customer (CustomerID, FirstName) VALUES (@Id, @Name);",
                                   conn))
             {
-                cmd.Parameters.AddWithValue("@CustomerID", newId);
-                cmd.Parameters.AddWithValue("@FirstName", customerTemp.CustomerName);
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@Name", customerTemp.CustomerName);
                 cmd.ExecuteNonQuery();
                 return newId;
             }
         }
-        */
 
-        
+
+
+
+
+
+
+        private int GetNextCustomerId()
+        {
+            using (SqlCommand cmd =
+                   new SqlCommand("SELECT ISNULL(MAX(CustomerID),0)+1 FROM Customer", conn))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
 
 
 
