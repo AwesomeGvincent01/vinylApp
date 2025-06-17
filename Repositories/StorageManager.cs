@@ -111,7 +111,7 @@ namespace vinylApp.Repositories
 
         public List<Customer> GetAllCustomers()
         {
-            List<Customer> genres = new List<Customer>();
+            List<Customer> customers = new List<Customer>();
             string sqlString = "SELECT * FROM Customer";
 
             using (SqlCommand cmd = new SqlCommand(sqlString, conn))
@@ -132,18 +132,18 @@ namespace vinylApp.Repositories
 
         }
 
-        public int UpdateCustomerName(int genreId, string genreName)
+        public int UpdateCustomerName(int customerId, string customerName)
         {
-            string sql = "UPDATE Customer SET Name = @CustomerName WHERE CustomerID = @CustomerId";
+            string sql = "UPDATE Customer SET FirstName = @FirstName WHERE CustomerID = @CustomerId";
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                cmd.Parameters.AddWithValue("@FirstName", customerName);
                 cmd.Parameters.AddWithValue("@CustomerId", customerId);
                 return cmd.ExecuteNonQuery();
             }
         }
 
-        public int InsertCustomer(Genre genreTemp)
+        /*public int InsertCustomer(Customer customertemp)
         {
             int newId = GetNextCustomerId();
 
@@ -157,7 +157,7 @@ namespace vinylApp.Repositories
                 return newId;
             }
         }
-
+        */
 
         
 

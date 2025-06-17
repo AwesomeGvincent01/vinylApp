@@ -32,7 +32,7 @@ namespace vinylApp
                         UpdateGenreName();
                         break;
                     case "3":
-                         InsertNewGenre();
+                        InsertNewGenre();
                         break;
                     case "4":
                         DeleteGenreByName();
@@ -58,7 +58,7 @@ namespace vinylApp
                         Console.WriteLine("Invalid option.");
                         break;
                 }
-                
+
             }
             storageManager1.CloseConnection();
         }
@@ -107,4 +107,5 @@ namespace vinylApp
 
 
         }
+    }
 }
