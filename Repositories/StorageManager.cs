@@ -107,7 +107,7 @@ namespace vinylApp.Repositories
 
 
 
-        //test
+        //customer
 
         public List<Customer> GetAllCustomers()
         {
