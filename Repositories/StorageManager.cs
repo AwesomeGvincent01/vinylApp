@@ -229,6 +229,37 @@ namespace vinylApp.Repositories
 
 
 
+
+        //Artist
+
+
+        public List<Artist> GetAllArtists()
+        {
+            List<Artist> artists = new List<Artist>();
+            string sqlString = "SELECT * FROM Artist";
+
+            using (SqlCommand cmd = new SqlCommand(sqlString, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int artistId = Convert.ToInt32(reader["ArtistID"]);
+                        string artistName = reader["ArtistName"].ToString();
+                        artists.Add(new Artist(artistId, artistName));
+                    }
+                }
+            }
+
+            return artists;
+        }
+
+
+
+
+
+
+
         public void CloseConnection()
         {
             if (conn != null && conn.State == ConnectionState.Open)

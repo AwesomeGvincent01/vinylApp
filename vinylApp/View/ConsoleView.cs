@@ -23,6 +23,7 @@ namespace vinylApp.View
             Console.WriteLine("6. Update Customer name by customer_id");
             Console.WriteLine("7. Insert a new Customer");
             Console.WriteLine("8. Delete a customer by customer_name");
+            Console.WriteLine("9. View all records in Artist");
             Console.WriteLine("------------------------------- ");
             Console.WriteLine("Select an option: ");
 
@@ -44,6 +45,15 @@ namespace vinylApp.View
             foreach (Customer customer in customers)
             {
                 Console.WriteLine($"{customer.CustomerId}, {customer.CustomerName}");
+            }
+        }
+
+
+        public void DisplayArtists(List<Artist> artists)
+        {
+            foreach (Artist artist in artists)
+            {
+                Console.WriteLine($"{artist.ArtistId}, {artist.ArtistName}");
             }
         }
 

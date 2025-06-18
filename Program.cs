@@ -56,6 +56,13 @@ namespace vinylApp
                         break;
 
                     case "9":
+                        List<Artist> artists = storageManager1.GetAllArtists();
+                        view.DisplayArtists(artists);
+                        break;
+
+
+
+                    case "10":
                         Console.WriteLine("Exiting program...");
                         Console.ReadLine();
 
@@ -136,5 +143,27 @@ namespace vinylApp
             int rowsAffected = storageManager1.DeleteCustomerByName(customerName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
+
+
+
+
+
+        private static void UpdateArtistName()
+        {
+            view.DisplayMessage("Enter the artist_id to update: ");
+            int artistId = view.GetIntInput();
+            view.DisplayMessage("Enter the new artist name");
+            string artistName = view.GetInput();
+            int rowsAffected = storageManager1.UpdateArtistName(artistId, artistName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+
+
+
+
+
+        }
+
     }
 }
+
