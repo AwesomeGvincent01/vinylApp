@@ -9,26 +9,57 @@ namespace vinylApp.View
 {
     public class ConsoleView
     {
-        public string DisplayMenu()
+        public string DisplayMainMenu()
         {
-            Console.WriteLine(" ");
-            Console.WriteLine("Welcome to the vinyl record database system");
-            Console.WriteLine("------------------------------- ");
-            Console.WriteLine("Menu: ");
-            Console.WriteLine("1. View All records in Genre");
-            Console.WriteLine("2. Update genre name by genre_id");
-            Console.WriteLine("3. Insert a new genre");
-            Console.WriteLine("4. Delete a genre by genre_name");
-            Console.WriteLine("5. View All records in Customer");
-            Console.WriteLine("6. Update Customer name by customer_id");
-            Console.WriteLine("7. Insert a new Customer");
-            Console.WriteLine("8. Delete a customer by customer_name");
-            Console.WriteLine("------------------------------- ");
-            Console.WriteLine("Select an option: ");
-
+            Console.WriteLine("\nWelcome to the vinyl record database system");
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Main Menu:");
+            Console.WriteLine("1. Genre Menu");
+            Console.WriteLine("2. Customer Menu");
+            Console.WriteLine("3. Artist Menu [WIP]");
+            Console.WriteLine("4. Exit");
+            Console.Write("Select an option: ");
             return Console.ReadLine();
-
         }
+
+
+        public string DisplayGenreMenu()
+        {
+            Console.WriteLine("\n--- Genre Menu ---");
+            Console.WriteLine("1. View All Genres");
+            Console.WriteLine("2. Update Genre Name by ID");
+            Console.WriteLine("3. Insert New Genre");
+            Console.WriteLine("4. Delete Genre by Name");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+        public string DisplayCustomerMenu()
+        {
+            Console.WriteLine("\n--- Customer Menu ---");
+            Console.WriteLine("1. View All Customers");
+            Console.WriteLine("2. Update Customer First Name by ID");
+            Console.WriteLine("3. Insert New Customer");
+            Console.WriteLine("4. Delete Customer by Name");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+        public string DisplayArtistMenu()
+        {
+            Console.WriteLine("\n--- Artist Menu ---");
+            Console.WriteLine("1. View All Artists");
+            Console.WriteLine("2. Update Artist Name by ID");
+            Console.WriteLine("3. Insert New Artist");
+            Console.WriteLine("4. Delete Artist by Name");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
 
 
         public void DisplayGenres(List<Genre> genres)

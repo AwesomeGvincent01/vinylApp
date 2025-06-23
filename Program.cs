@@ -11,23 +11,53 @@ namespace vinylApp
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, Earth!");
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\ac148838\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30";
+            Console.WriteLine("Hello, Admin!");
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
 
             storageManager1 = new StorageManager(connectionString);
             view = new ConsoleView();
 
+
+
             while (true)
             {
-                string choice = view.DisplayMenu();
-
+                string choice = view.DisplayMainMenu();
                 switch (choice)
                 {
                     case "1":
-                        List<Genre> genres = storageManager1.GetAllGenres();
-                        view.DisplayGenres(genres);
+                        HandleGenreMenu();
                         break;
+                    case "2":
+                        HandleCustomerMenu();
+                        break;
+                    case "3":
+                        HandleArtistMenu();
+                        break;
+                    case "4":
+                        Console.WriteLine("Exiting program...");
+                        storageManager1.CloseConnection();
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
 
+            }
+
+
+            storageManager1.CloseConnection();
+        }
+
+        private static void HandleGenreMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayGenreMenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayGenres(storageManager1.GetAllGenres());
+                        break;
                     case "2":
                         UpdateGenreName();
                         break;
@@ -37,39 +67,71 @@ namespace vinylApp
                     case "4":
                         DeleteGenreByName();
                         break;
-
                     case "5":
-                        List<Customer> customers = storageManager1.GetAllCustomers();
-                        view.DisplayCustomers(customers);
-                        break;
-
-                    case "6":
-                        UpdateCustomerName();
-                        break;
-
-                    case "7":
-                        InsertNewCustomer();
-                        break;
-
-                    case "8":
-                        DeleteCustomerByName();
-                        break;
-
-                    case "9":
-                        Console.WriteLine("Exiting program...");
-                        Console.ReadLine();
-
                         return;
-
-
                     default:
                         Console.WriteLine("Invalid option.");
                         break;
                 }
-
             }
-            storageManager1.CloseConnection();
         }
+
+        private static void HandleCustomerMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayCustomerMenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayCustomers(storageManager1.GetAllCustomers());
+                        break;
+                    case "2":
+                        UpdateCustomerName();
+                        break;
+                    case "3":
+                        InsertNewCustomer();
+                        break;
+                    case "4":
+                        DeleteCustomerByName();
+                        break;
+                    case "5":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
+        private static void HandleArtistMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayArtistMenu();
+                switch (choice)
+                {
+                    case "1":
+                        
+                        break;
+                    case "2":
+                       
+                        break;
+                    case "3":
+                       
+                        break;
+                    case "4":
+                       
+                        break;
+                    case "5":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
 
         private static void UpdateGenreName()
         {
