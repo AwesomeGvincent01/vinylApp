@@ -1,6 +1,7 @@
 ﻿using vinylApp.Model;
 using vinylApp.Repositories;
 using vinylApp.View;
+using vinylApp.vinylApp.Model;
 
 namespace vinylApp
 {
@@ -21,38 +22,10 @@ namespace vinylApp
 
 
 
-            while (true)
-            {
-                string choice = view.DisplayMainMenu();
-                switch (choice)
-                {
-                    case "1":
-                        HandleGenreMenu();
-                        break;
-                    case "2":
-                        HandleCustomerMenu();
-                        break;
-                    case "3":
-                        HandleArtistMenu();
-                        break;
-                    case "4":
-                        HandleRecordMenu();
-                        break;
-                    case "5":
-                        HandleOrderMenu();
-                        break;
-                    case "6":
-                        Console.WriteLine("Exiting program...");
-                        storageManager1.CloseConnection();
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
-                }
-
-            }
 
 
+
+            HandleAccountMenu();
             storageManager1.CloseConnection();
         }
 
@@ -202,8 +175,154 @@ namespace vinylApp
 
 
 
+        private static User currentUser = null;
+
+        private static void HandleAccountMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n--- Account Menu ---");
+                Console.WriteLine("1. Login");
+                Console.WriteLine("2. Register");
+                Console.WriteLine("3. Exit");
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        Login();
+                        break;
+                    case "2":
+                        Register();
+                        break;
+                    case "3":
+                        Console.WriteLine("Exiting program...");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+
+                if (currentUser != null)
+                {
+                    if (currentUser.IsAdmin)
+                    {
+                        HandleAdminMainMenu();
+                    }
+                    else
+                    {
+                        HandleUserMainMenu();
+                    }
+                }
+            }
+        }
 
 
+        private static void Login()
+        {
+            view.DisplayMessage("Enter username: ");
+            string username = view.GetInput();
+
+            view.DisplayMessage("Enter password: ");
+            string password = view.GetInput();
+
+            currentUser = storageManager1.GetUserByUsernameAndPassword(username.ToUpper(), password.ToUpper());
+
+            if (currentUser != null)
+            {
+                Console.WriteLine("Login successful!");
+            }
+            else
+            {
+                Console.WriteLine("Login failed. Invalid username or password.");
+            }
+        }
+
+
+
+        private static void Register()
+        {
+            view.DisplayMessage("Enter a new username: ");
+            string username = view.GetInput();
+
+            view.DisplayMessage("Enter a password: ");
+            string password = view.GetInput();
+
+            bool isAdmin = false;
+
+            User newUser = new User(0, username, password, isAdmin);
+            int newId = storageManager1.InsertUser(newUser);
+            Console.WriteLine($"Registered! Your ID is {newId}");
+        }
+
+
+        private static void HandleAdminMainMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayMainMenu();
+                switch (choice)
+                {
+                    case "1":
+                        HandleGenreMenu();
+                        break;
+                    case "2":
+                        HandleCustomerMenu();
+                        break;
+                    case "3":
+                        HandleArtistMenu();
+                        break;
+                    case "4":
+                        HandleRecordMenu();
+                        break;
+                    case "5":
+                        HandleOrderMenu();
+                        break;
+                    case "6":
+                        Console.WriteLine("Logging out...");
+                        currentUser = null;
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
+        private static void HandleUserMainMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n--- User Menu ---");
+                Console.WriteLine("1. View All Records");
+                Console.WriteLine("2. View All Genres");
+                Console.WriteLine("3. View All Artists");
+                Console.WriteLine("4. Logout");
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        break;
+                    case "2":
+                        view.DisplayGenres(storageManager1.GetAllGenres());
+                        break;
+                    case "3":
+                        view.DisplayArtists(storageManager1.GetAllArtists());
+                        break;
+                    case "4":
+                        Console.WriteLine("Logging out...");
+                        currentUser = null;
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
 
 
         private static void UpdateGenreName()

@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using vinylApp.Model;
 using vinylApp;
 using System.Data;
+using vinylApp.vinylApp.Model;
 
 namespace vinylApp.Repositories
 {
@@ -467,6 +468,57 @@ namespace vinylApp.Repositories
                 return (int)cmd.ExecuteScalar();
             }
         }
+
+
+
+
+
+            public User GetUserByUsernameAndPassword(string username, string password)
+        {
+            string sql = "string sql = \"SELECT * FROM Users WHERE Usernme = @username AND Password = @password\";";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", password);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        int userId = Convert.ToInt32(reader["UserID"]);
+                        string uname = reader["Username"].ToString();
+                        string pword = reader["Password"].ToString();
+                        bool isAdmin = Convert.ToBoolean(reader["IsAdmin"]);
+                        return new User(userId, uname, pword, isAdmin);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public int InsertUser(User user)
+        {
+            int newId = GetNextUserId();
+            string sql = "INSERT INTO [User] (UserID, Username, Password, IsAdmin) VALUES (@Id, @Username, @Password, @IsAdmin)";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@Username", user.Username);
+                cmd.Parameters.AddWithValue("@Password", user.Password);
+                cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+                cmd.ExecuteNonQuery();
+                return newId;
+            }
+        }
+
+        private int GetNextUserId()
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(UserID),0)+1 FROM [User]", conn))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
 
 
 
