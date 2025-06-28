@@ -227,17 +227,18 @@ namespace vinylApp
             view.DisplayMessage("Enter password: ");
             string password = view.GetInput();
 
-            currentUser = storageManager1.GetUserByUsernameAndPassword(username.ToUpper(), password.ToUpper());
+            currentUser = storageManager1.GetUserByUsernameAndPassword(username, password);
 
             if (currentUser != null)
             {
-                Console.WriteLine("Login successful!");
+                Console.WriteLine($"\nLogin successful! Welcome, {currentUser.Username} ({(currentUser.IsAdmin ? "Admin" : "User")})");
             }
             else
             {
                 Console.WriteLine("Login failed. Invalid username or password.");
             }
         }
+
 
 
 
@@ -251,10 +252,17 @@ namespace vinylApp
 
             bool isAdmin = false;
 
-            User newUser = new User(0, username.ToUpper(), password.ToUpper(), isAdmin);
 
+            if (currentUser != null && currentUser.IsAdmin)
+            {
+                view.DisplayMessage("Is this an admin account? (yes/no): ");
+                string isAdminInput = view.GetInput().ToLower();
+                isAdmin = (isAdminInput == "yes" || isAdminInput == "y");
+            }
+
+            User newUser = new User(0, username, password, isAdmin);
             int newId = storageManager1.InsertUser(newUser);
-            Console.WriteLine($"Registered! Your ID is {newId}");
+            Console.WriteLine($"Registration complete. Your user ID is {newId}.");
         }
 
 
