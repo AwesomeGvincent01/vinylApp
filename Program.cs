@@ -251,7 +251,8 @@ namespace vinylApp
 
             bool isAdmin = false;
 
-            User newUser = new User(0, username, password, isAdmin);
+            User newUser = new User(0, username.ToUpper(), password.ToUpper(), isAdmin);
+
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registered! Your ID is {newId}");
         }

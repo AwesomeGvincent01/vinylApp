@@ -475,7 +475,9 @@ namespace vinylApp.Repositories
 
             public User GetUserByUsernameAndPassword(string username, string password)
         {
-            string sql = "string sql = \"SELECT * FROM Users WHERE Usernme = @username AND Password = @password\";";
+            string sql = "SELECT * FROM [User] WHERE Username = @username AND Password = @password;";
+
+            ;
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Username", username);
@@ -499,10 +501,11 @@ namespace vinylApp.Repositories
         public int InsertUser(User user)
         {
             int newId = GetNextUserId();
-            string sql = "INSERT INTO [User] (UserID, Username, Password, IsAdmin) VALUES (@Id, @Username, @Password, @IsAdmin)";
+            string sql = "INSERT INTO [User] (Username, Password, IsAdmin) VALUES (@Username, @Password, @IsAdmin)";
+
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@Id", newId);
+        
                 cmd.Parameters.AddWithValue("@Username", user.Username);
                 cmd.Parameters.AddWithValue("@Password", user.Password);
                 cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
