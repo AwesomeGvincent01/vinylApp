@@ -39,6 +39,9 @@ namespace vinylApp
                         HandleRecordMenu();
                         break;
                     case "5":
+                        HandleOrderMenu();
+                        break;
+                    case "6":
                         Console.WriteLine("Exiting program...");
                         storageManager1.CloseConnection();
                         return;
@@ -166,6 +169,37 @@ namespace vinylApp
                 }
             }
         }
+
+
+
+        private static void HandleOrderMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayOrderMenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayOrders(storageManager1.GetAllOrders());
+                        break;
+                    case "2":
+                        UpdateOrderStatus();
+                        break;
+                    case "3":
+                        InsertNewOrder();
+                        break;
+                    case "4":
+                        DeleteOrderById();
+                        break;
+                    case "5":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
 
 
 
@@ -337,6 +371,59 @@ namespace vinylApp
             int rowsAffected = storageManager1.DeleteRecordByTitle(title);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
+
+
+
+
+
+
+
+        private static void UpdateOrderStatus()
+        {
+            view.DisplayMessage("Enter the order ID to update: ");
+            int orderId = view.GetIntInput();
+
+            view.DisplayMessage("Enter the new order status: ");
+            string newStatus = view.GetInput();
+
+            int rowsAffected = storageManager1.UpdateOrderStatus(orderId, newStatus);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
+
+
+
+        private static void InsertNewOrder()
+        {
+            view.DisplayMessage("Enter the customer ID for this order: ");
+            int customerId = view.GetIntInput();
+
+            view.DisplayMessage("Enter the order date (e.g. 2025-06-28): ");
+            string date = view.GetInput();
+
+            view.DisplayMessage("Enter the order status (e.g. Pending, Shipped): ");
+            string status = view.GetInput();
+
+            Order order1 = new Order(0, customerId, date, status);
+            int generatedId = storageManager1.InsertOrder(order1);
+
+            view.DisplayMessage($"New order inserted with ID: {generatedId}");
+        }
+
+
+
+
+        private static void DeleteOrderById()
+        {
+            view.DisplayMessage("Enter the order ID to delete: ");
+            int orderId = view.GetIntInput();
+
+            int rowsAffected = storageManager1.DeleteOrderById(orderId);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
 
 
 

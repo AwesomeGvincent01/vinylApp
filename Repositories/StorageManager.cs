@@ -396,6 +396,79 @@ namespace vinylApp.Repositories
 
 
 
+        public List<Order> GetAllOrders()
+        {
+            List<Order> orders = new List<Order>();
+            string sql = "SELECT * FROM [Order]";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int orderId = Convert.ToInt32(reader["OrderID"]);
+                        int customerId = Convert.ToInt32(reader["CustomerID"]);
+                        string orderDate = reader["OrderDate"].ToString();
+                        string status = reader["Status"].ToString();
+
+                        orders.Add(new Order(orderId, customerId, orderDate, status));
+                    }
+                }
+            }
+
+            return orders;
+        }
+
+
+        public int InsertOrder(Order orderTemp)
+        {
+            int newId = GetNextOrderId();
+
+            using (SqlCommand cmd = new SqlCommand(
+                "INSERT INTO [Order] (OrderID, CustomerID, OrderDate, Status) VALUES (@Id, @CustomerId, @Date, @Status);", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@CustomerId", orderTemp.CustomerID);
+                cmd.Parameters.AddWithValue("@Date", orderTemp.OrderDate);
+                cmd.Parameters.AddWithValue("@Status", orderTemp.Status);
+                cmd.ExecuteNonQuery();
+                return newId;
+            }
+        }
+
+
+        public int UpdateOrderStatus(int orderId, string newStatus)
+        {
+            using (SqlCommand cmd = new SqlCommand("UPDATE [Order] SET Status = @Status WHERE OrderID = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Status", newStatus);
+                cmd.Parameters.AddWithValue("@Id", orderId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+        public int DeleteOrderById(int orderId)
+        {
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM [Order] WHERE OrderID = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", orderId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        private int GetNextOrderId()
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(OrderID),0)+1 FROM [Order]", conn))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+
 
         public void CloseConnection()
         {

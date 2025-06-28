@@ -18,7 +18,8 @@ namespace vinylApp.View
             Console.WriteLine("2. Customer Menu");
             Console.WriteLine("3. Artist Menu [WIP]");
             Console.WriteLine("4. Record Menu");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Order Menu");
+            Console.WriteLine("6. Exit");
             Console.Write("Select an option: ");
 
             return Console.ReadLine();
@@ -62,6 +63,32 @@ namespace vinylApp.View
         }
 
 
+        public string DisplayRecordMenu()
+        {
+            Console.WriteLine("\n--- Record Menu ---");
+            Console.WriteLine("1. View All Records");
+            Console.WriteLine("2. Update Record Title");
+            Console.WriteLine("3. Insert New Record");
+            Console.WriteLine("4. Delete Record by Title");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
+        public string DisplayOrderMenu()
+        {
+            Console.WriteLine("\n--- Order Menu ---");
+            Console.WriteLine("1. View All Orders");
+            Console.WriteLine("2. Update Order Status");
+            Console.WriteLine("3. Insert New Order");
+            Console.WriteLine("4. Delete Order by ID");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
 
 
         public void DisplayGenres(List<Genre> genres)
@@ -87,17 +114,7 @@ namespace vinylApp.View
             }
         }
 
-        public string DisplayRecordMenu()
-        {
-            Console.WriteLine("\n--- Record Menu ---");
-            Console.WriteLine("1. View All Records");
-            Console.WriteLine("2. Update Record Title");
-            Console.WriteLine("3. Insert New Record");
-            Console.WriteLine("4. Delete Record by Title");
-            Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select an option: ");
-            return Console.ReadLine();
-        }
+        
 
 
 
@@ -122,6 +139,16 @@ namespace vinylApp.View
                 Console.WriteLine($"{record.RecordID},         {record.Title},         {record.ReleaseYear}, ArtistID:                {record.ArtistID}, GenreID: {record.GenreID}");
             }
         }
+
+
+        public void DisplayOrders(List<Order> orders)
+        {
+            foreach (Order order in orders)
+            {
+                Console.WriteLine($"{order.OrderID}, CustomerID: {order.CustomerID}, Date: {order.OrderDate}, Status: {order.Status}");
+            }
+        }
+
 
 
         public void DisplayMessage(string message)

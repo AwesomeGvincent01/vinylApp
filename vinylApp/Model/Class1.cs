@@ -4,9 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vinylApp.vinylApp.Model
+namespace vinylApp.Model
 {
-    internal class Class1
+    public class Order
     {
+        public int OrderID { get; set; }
+        public int CustomerID { get; set; }
+        public string OrderDate { get; set; }
+        public string Status { get; set; }
+
+        public Order(int orderId, int customerId, string orderDate, string status)
+        {
+            OrderID = orderId;
+            CustomerID = customerId;
+            OrderDate = orderDate;
+            Status = status;
+        }
     }
 }
