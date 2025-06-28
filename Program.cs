@@ -1,4 +1,5 @@
-﻿using vinylApp.Model;
+﻿using LanguageExt;
+using vinylApp.Model;
 using vinylApp.Repositories;
 using vinylApp.View;
 using vinylApp.vinylApp.Model;
@@ -13,7 +14,7 @@ namespace vinylApp
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Hello, Earth!");
+            Console.WriteLine("Connecting to the vinyl database system... might take a while, please be patient!!");
             string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
 
 
@@ -51,7 +52,7 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update genre name = input '1', insert genre = input '2', and so on.)");
                         break;
                 }
             }
@@ -79,7 +80,7 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update customer name = input '1', insert customer = input '2', and so on.)");
                         break;
                 }
             }
@@ -107,7 +108,7 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update artist name = input '1', insert artist = input '2', and so on.)");
                         break;
                 }
             }
@@ -137,7 +138,7 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update record title = input '1', insert record = input '2', and so on.)");
                         break;
                 }
             }
@@ -167,7 +168,7 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update order status = input '1', insert new order = input '2', and so on.)");
                         break;
                 }
             }
@@ -181,11 +182,11 @@ namespace vinylApp
         {
             while (true)
             {
-                Console.WriteLine("\n--- Account Menu ---");
+                Console.WriteLine("\n--- Welcome to the vinyl database system! ---\nPlease choose to login or register below");
                 Console.WriteLine("1. Login");
                 Console.WriteLine("2. Register");
                 Console.WriteLine("3. Exit");
-                Console.Write("Choose an option: ");
+                Console.Write("Choose a option: ");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -197,10 +198,10 @@ namespace vinylApp
                         Register();
                         break;
                     case "3":
-                        Console.WriteLine("Exiting program...");
+                        Console.WriteLine("Exiting the program... please wait...");
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.WriteLine("Invalid input! please choose a valid option.If you're confused, the options are number based (To Login, input '1', to register/create a new account, input '2', and to exit, input '3'.)");
                         break;
                 }
 
@@ -271,7 +272,8 @@ namespace vinylApp
             while (true)
             {
                 string choice = view.DisplayMainMenu();
-                switch (choice)
+               
+                  switch (choice)
                 {
                     case "1":
                         HandleGenreMenu();
@@ -289,6 +291,9 @@ namespace vinylApp
                         HandleOrderMenu();
                         break;
                     case "6":
+                        CreateUser();
+                        break;
+                    case "7":
                         Console.WriteLine("Logging out...");
                         currentUser = null;
                         return;
@@ -296,8 +301,10 @@ namespace vinylApp
                         Console.WriteLine("Invalid option.");
                         break;
                 }
+
             }
         }
+    
 
         private static void HandleUserMainMenu()
         {
@@ -308,7 +315,7 @@ namespace vinylApp
                 Console.WriteLine("2. View All Genres");
                 Console.WriteLine("3. View All Artists");
                 Console.WriteLine("4. Logout");
-                Console.Write("Choose an option: ");
+                Console.Write("Choose a option: ");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -334,6 +341,25 @@ namespace vinylApp
         }
 
 
+        private static void CreateUser()
+        {
+            view.DisplayMessage("Enter a username for the new user:");
+            string username = view.GetInput();
+
+            view.DisplayMessage("Enter a password:");
+            string password = view.GetInput();
+
+            view.DisplayMessage("Is this an admin account? (yes/no):");
+            string isAdminInput = view.GetInput().ToLower();
+            bool isAdmin = (isAdminInput == "yes" || isAdminInput == "y");
+
+            User newUser = new User(0, username, password, isAdmin);
+            int newId = storageManager1.InsertUser(newUser);
+            Console.WriteLine($"User created successfully. ID: {newId}");
+        }
+
+
+
         private static void UpdateGenreName()
         {
             view.DisplayMessage("Enter the genre_id to update: ");
@@ -346,7 +372,7 @@ namespace vinylApp
 
         private static void InsertNewGenre()
         {
-            view.DisplayMessage("Enter the new genre name: ");
+            view.DisplayMessage("Enter new genre name: ");
 
             string genreName = view.GetInput();
             Genre genre1 = new Genre(0, genreName);
@@ -356,7 +382,7 @@ namespace vinylApp
 
         private static void DeleteGenreByName()
         {
-            view.DisplayMessage("Enter the genre name to delete: ");
+            view.DisplayMessage("Enter genre you want to delete: ");
             string genreName = view.GetInput();
             int rowsAffected = storageManager1.DeleteGenreByName(genreName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
@@ -365,13 +391,13 @@ namespace vinylApp
 
         private static void UpdateCustomerName()
         {
-            view.DisplayMessage("Enter the customer ID to update: ");
+            view.DisplayMessage("Enter customer_id to update: ");
             int customerId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the new FIRST name: ");
+            view.DisplayMessage("Enter first name: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter the new LAST name: ");
+            view.DisplayMessage("Enter last name: ");
             string lastName = view.GetInput();
 
             int rowsAffected = storageManager1.UpdateCustomerName(customerId, firstName, lastName);
@@ -383,26 +409,26 @@ namespace vinylApp
 
         private static void InsertNewCustomer()
         {
-            view.DisplayMessage("Enter the FIRST name of the new customer: ");
+            view.DisplayMessage("Enter first name of new customer: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter the LAST name of the new customer: ");
+            view.DisplayMessage("Enter first name of new customer: ");
             string lastName = view.GetInput();
 
             Customer customer1 = new Customer(0, firstName, lastName);
             int generatedId = storageManager1.InsertCustomer(customer1);
 
-            view.DisplayMessage($"New customer inserted with ID: {generatedId}");
+            view.DisplayMessage($"New customer, '{customer1}' inserted with ID: {generatedId}");
         }
 
 
 
         private static void DeleteCustomerByName()
         {
-            view.DisplayMessage("Enter the FIRST name of the customer to delete: ");
+            view.DisplayMessage("Enter first name of the customer to delete: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter the LAST name of the customer to delete: ");
+            view.DisplayMessage("Enter last name of the customer to delete: ");
             string lastName = view.GetInput();
 
             int rowsAffected = storageManager1.DeleteCustomerByName(firstName, lastName);
@@ -413,10 +439,10 @@ namespace vinylApp
 
         private static void UpdateArtistName()
         {
-            view.DisplayMessage("Enter the artist ID to update: ");
+            view.DisplayMessage("Enter artist ID to update: ");
             int artistId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the new artist name: ");
+            view.DisplayMessage("Enter new artist name: ");
             string newName = view.GetInput();
 
             int rowsAffected = storageManager1.UpdateArtistName(artistId, newName);
@@ -427,10 +453,10 @@ namespace vinylApp
 
         private static void InsertNewArtist()
         {
-            view.DisplayMessage("Enter the artist name: ");
+            view.DisplayMessage("Enter artist name: ");
             string name = view.GetInput();
 
-            view.DisplayMessage("Enter the artist's country: ");
+            view.DisplayMessage("Enter artist country: ");
             string country = view.GetInput();
 
             Artist artist1 = new Artist(0, name, country);
@@ -444,7 +470,7 @@ namespace vinylApp
 
         private static void DeleteArtistByName()
         {
-            view.DisplayMessage("Enter the name of the artist to delete: ");
+            view.DisplayMessage("Enter name of the artist to delete: ");
             string name = view.GetInput();
 
             int rowsAffected = storageManager1.DeleteArtistByName(name);
@@ -455,10 +481,10 @@ namespace vinylApp
 
         private static void UpdateRecordTitle()
         {
-            view.DisplayMessage("Enter the record ID to update: ");
+            view.DisplayMessage("Enter record ID to update: ");
             int recordId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the new record title: ");
+            view.DisplayMessage("Enter new record title: ");
             string newTitle = view.GetInput();
 
             int rowsAffected = storageManager1.UpdateRecordTitle(recordId, newTitle);
@@ -470,16 +496,16 @@ namespace vinylApp
 
         private static void InsertNewRecord()
         {
-            view.DisplayMessage("Enter the record title: ");
+            view.DisplayMessage("Enter record title: ");
             string title = view.GetInput();
 
-            view.DisplayMessage("Enter the release year: ");
+            view.DisplayMessage("Enter release year: ");
             int year = view.GetIntInput();
 
-            view.DisplayMessage("Enter the Artist ID: ");
+            view.DisplayMessage("Enter Artist ID: ");
             int artistId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the Genre ID: ");
+            view.DisplayMessage("Enter Genre ID: ");
             int genreId = view.GetIntInput();
 
             Record record1 = new Record(0, title, year, artistId, genreId);
@@ -493,7 +519,7 @@ namespace vinylApp
 
         private static void DeleteRecordByTitle()
         {
-            view.DisplayMessage("Enter the title of the record to delete: ");
+            view.DisplayMessage("Enter title of the record to delete: ");
             string title = view.GetInput();
 
             int rowsAffected = storageManager1.DeleteRecordByTitle(title);
@@ -508,10 +534,10 @@ namespace vinylApp
 
         private static void UpdateOrderStatus()
         {
-            view.DisplayMessage("Enter the order ID to update: ");
+            view.DisplayMessage("Enter order ID to update: ");
             int orderId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the new order status: ");
+            view.DisplayMessage("Enter new order status: ");
             string newStatus = view.GetInput();
 
             int rowsAffected = storageManager1.UpdateOrderStatus(orderId, newStatus);
@@ -524,13 +550,13 @@ namespace vinylApp
 
         private static void InsertNewOrder()
         {
-            view.DisplayMessage("Enter the customer ID for this order: ");
+            view.DisplayMessage("Enter customer ID for this order: ");
             int customerId = view.GetIntInput();
 
-            view.DisplayMessage("Enter the order date (e.g. 2025-06-28): ");
+            view.DisplayMessage("Enter order date (format: 0000-00-00): ");
             string date = view.GetInput();
 
-            view.DisplayMessage("Enter the order status (e.g. Pending, Shipped): ");
+            view.DisplayMessage("Enter order status (e.g. Pending, Shipped): ");
             string status = view.GetInput();
 
             Order order1 = new Order(0, customerId, date, status);

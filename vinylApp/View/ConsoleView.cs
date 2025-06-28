@@ -19,8 +19,9 @@ namespace vinylApp.View
             Console.WriteLine("3. Artist Menu [WIP]");
             Console.WriteLine("4. Record Menu");
             Console.WriteLine("5. Order Menu");
-            Console.WriteLine("6. Exit");
-            Console.Write("Select an option: ");
+            Console.WriteLine("6. Create User/Admin Account");
+            Console.WriteLine("7. Logout");
+            Console.Write("Select a option: ");
 
             return Console.ReadLine();
         }
@@ -34,7 +35,7 @@ namespace vinylApp.View
             Console.WriteLine("3. Insert New Genre");
             Console.WriteLine("4. Delete Genre by Name");
             Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select an option: ");
+            Console.Write("Select a option: ");
             return Console.ReadLine();
         }
 
@@ -58,7 +59,7 @@ namespace vinylApp.View
             Console.WriteLine("3. Insert New Artist");
             Console.WriteLine("4. Delete Artist by Name");
             Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select an option: ");
+            Console.Write("Select a option: ");
             return Console.ReadLine();
         }
 
@@ -71,7 +72,7 @@ namespace vinylApp.View
             Console.WriteLine("3. Insert New Record");
             Console.WriteLine("4. Delete Record by Title");
             Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select an option: ");
+            Console.Write("Select a option: ");
             return Console.ReadLine();
         }
 
@@ -84,7 +85,7 @@ namespace vinylApp.View
             Console.WriteLine("3. Insert New Order");
             Console.WriteLine("4. Delete Order by ID");
             Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select an option: ");
+            Console.Write("Select a option: ");
             return Console.ReadLine();
         }
 

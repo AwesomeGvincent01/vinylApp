@@ -22,7 +22,10 @@ namespace vinylApp.Repositories
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Connection successful");
+                Console.ResetColor();
+
             }
             catch (SqlException e)
             {
