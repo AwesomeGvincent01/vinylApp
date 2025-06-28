@@ -112,16 +112,16 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-                        
+
                         break;
                     case "2":
-                       
+
                         break;
                     case "3":
-                       
+
                         break;
                     case "4":
-                       
+
                         break;
                     case "5":
                         return;
@@ -164,38 +164,47 @@ namespace vinylApp
 
         private static void UpdateCustomerName()
         {
-            view.DisplayMessage("Enter the customer_id to update: ");
+            view.DisplayMessage("Enter the customer ID to update: ");
             int customerId = view.GetIntInput();
-            view.DisplayMessage("Enter the new customer name");
-            string customerName = view.GetInput();
-            int rowsAffected = storageManager1.UpdateCustomerName(customerId, customerName);
+
+            view.DisplayMessage("Enter the new FIRST name: ");
+            string firstName = view.GetInput();
+
+            view.DisplayMessage("Enter the new LAST name: ");
+            string lastName = view.GetInput();
+
+            int rowsAffected = storageManager1.UpdateCustomerName(customerId, firstName, lastName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
-
-
-
-
-
-
         }
+
 
 
 
         private static void InsertNewCustomer()
         {
-            view.DisplayMessage("Enter the new customer name: ");
+            view.DisplayMessage("Enter the FIRST name of the new customer: ");
+            string firstName = view.GetInput();
 
-            string customerName = view.GetInput();
-            Customer customer1 = new Customer(0, customerName);
+            view.DisplayMessage("Enter the LAST name of the new customer: ");
+            string lastName = view.GetInput();
+
+            Customer customer1 = new Customer(0, firstName, lastName);
             int generatedId = storageManager1.InsertCustomer(customer1);
+
             view.DisplayMessage($"New customer inserted with ID: {generatedId}");
         }
 
 
+
         private static void DeleteCustomerByName()
         {
-            view.DisplayMessage("Enter the customer name to delete: ");
-            string customerName = view.GetInput();
-            int rowsAffected = storageManager1.DeleteCustomerByName(customerName);
+            view.DisplayMessage("Enter the FIRST name of the customer to delete: ");
+            string firstName = view.GetInput();
+
+            view.DisplayMessage("Enter the LAST name of the customer to delete: ");
+            string lastName = view.GetInput();
+
+            int rowsAffected = storageManager1.DeleteCustomerByName(firstName, lastName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
     }

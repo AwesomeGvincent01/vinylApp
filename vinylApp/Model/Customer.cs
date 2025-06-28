@@ -10,15 +10,17 @@ namespace vinylApp.Model
     {
         public int CustomerId { get; set; }
 
-        public string CustomerName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; } //test
 
 
 
 
-        public Customer(int customerId, string customerName)
+        public Customer(int customerId, string firstName, string lastName)
         {
             CustomerId = customerId;
-            CustomerName = customerName;
+           FirstName = firstName;
+            LastName = lastName;
         }
     }
 }

@@ -121,38 +121,41 @@ namespace vinylApp.Repositories
                     while (reader.Read())
                     {
                         int customerId = Convert.ToInt32(reader["CustomerID"]);
-                        string customerName = reader["FirstName"].ToString();
-                        customers.Add(new Customer(customerId, customerName));
+                        string firstName = reader["FirstName"].ToString();
+                        string lastName = reader["LastName"].ToString();
+
+                        customers.Add(new Customer(customerId, firstName, lastName));
                     }
                 }
             }
 
             return customers;
-
-
         }
 
-        public int UpdateCustomerName(int customerId, string customerName)
+
+        public int UpdateCustomerName(int customerId, string firstName, string lastName)
         {
-            string sql = "UPDATE Customer SET FirstName = @FirstName WHERE CustomerID = @CustomerId";
+            string sql = "UPDATE Customer SET FirstName = @FirstName, LastName = @LastName WHERE CustomerID = @CustomerId";
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@FirstName", customerName);
+                cmd.Parameters.AddWithValue("@FirstName", firstName);
+                cmd.Parameters.AddWithValue("@LastName", lastName);
                 cmd.Parameters.AddWithValue("@CustomerId", customerId);
                 return cmd.ExecuteNonQuery();
             }
         }
 
-       public int InsertCustomer(Customer customerTemp)
+
+        public int InsertCustomer(Customer customerTemp)
         {
             int newId = GetNextCustomerId();
 
-            using (SqlCommand cmd =
-                   new SqlCommand("INSERT INTO Customer (CustomerID, FirstName) VALUES (@Id, @Name);",
-                                  conn))
+            using (SqlCommand cmd = new SqlCommand(
+                "INSERT INTO Customer (CustomerID, FirstName, LastName) VALUES (@Id, @FirstName, @LastName);", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", newId);
-                cmd.Parameters.AddWithValue("@Name", customerTemp.CustomerName);
+                cmd.Parameters.AddWithValue("@FirstName", customerTemp.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", customerTemp.LastName);
                 cmd.ExecuteNonQuery();
                 return newId;
             }
@@ -160,14 +163,18 @@ namespace vinylApp.Repositories
 
 
 
-        public int DeleteCustomerByName(string customerName)
+
+        public int DeleteCustomerByName(string firstName, string lastName)
         {
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Customer WHERE FirstName = @CustomerName", conn))
+            using (SqlCommand cmd = new SqlCommand(
+                "DELETE FROM Customer WHERE FirstName = @FirstName AND LastName = @LastName", conn))
             {
-                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                cmd.Parameters.AddWithValue("@FirstName", firstName);
+                cmd.Parameters.AddWithValue("@LastName", lastName);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
 
 

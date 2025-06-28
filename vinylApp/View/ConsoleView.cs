@@ -74,7 +74,7 @@ namespace vinylApp.View
         {
             foreach (Customer customer in customers)
             {
-                Console.WriteLine($"{customer.CustomerId}, {customer.CustomerName}");
+                Console.WriteLine($"{customer.CustomerId}, {customer.FirstName}, {customer.LastName}");
             }
         }
 
