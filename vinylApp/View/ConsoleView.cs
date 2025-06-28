@@ -40,7 +40,7 @@ namespace vinylApp.View
         {
             Console.WriteLine("\n--- Customer Menu ---");
             Console.WriteLine("1. View All Customers");
-            Console.WriteLine("2. Update Customer First Name by ID");
+            Console.WriteLine("2. Update Customer Name by ID");
             Console.WriteLine("3. Insert New Customer");
             Console.WriteLine("4. Delete Customer by Name");
             Console.WriteLine("5. Return to Main Menu");
@@ -65,6 +65,8 @@ namespace vinylApp.View
 
         public void DisplayGenres(List<Genre> genres)
         {
+            Console.WriteLine("\nID | Name");
+            Console.WriteLine("-----------");
             foreach (Genre genre in genres)
             {
                 Console.WriteLine($"{genre.GenreId}, {genre.GenreName}");
@@ -72,21 +74,30 @@ namespace vinylApp.View
         }
 
         public void DisplayCustomers(List<Customer> customers)
+
+
         {
+            Console.WriteLine("\nID  | Name");
+            Console.WriteLine("------------------");
+
             foreach (Customer customer in customers)
             {
-                Console.WriteLine($"{customer.CustomerId}, {customer.FirstName}, {customer.LastName}");
+                Console.WriteLine($"{customer.CustomerId}     {customer.FirstName} {customer.LastName}");
             }
         }
 
 
         public void DisplayArtists(List<Artist> artists)
         {
+            Console.WriteLine("ID   | Name               | Country");
+            Console.WriteLine("-----------------------------------");
+
             foreach (Artist artist in artists)
             {
-                Console.WriteLine($"{artist.ArtistId}, {artist.ArtistName}");
+                Console.WriteLine(artist.ArtistId + "    | " + artist.ArtistName + "           | " + artist.Country);
             }
         }
+
 
 
 

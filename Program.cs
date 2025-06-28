@@ -13,7 +13,7 @@ namespace vinylApp
         {
 
             Console.WriteLine("Hello, Earth!");
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\ac148838\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
 
 
             storageManager1 = new StorageManager(connectionString);
@@ -114,16 +114,16 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-
+                        view.DisplayArtists(storageManager1.GetAllArtists());
                         break;
                     case "2":
-
+                        UpdateArtistName();
                         break;
                     case "3":
-
+                        InsertNewArtist();
                         break;
                     case "4":
-
+                        DeleteArtistByName();
                         break;
                     case "5":
                         return;
@@ -133,6 +133,7 @@ namespace vinylApp
                 }
             }
         }
+
 
 
         private static void UpdateGenreName()
@@ -212,24 +213,50 @@ namespace vinylApp
 
 
 
-
-
         private static void UpdateArtistName()
         {
-            view.DisplayMessage("Enter the artist_id to update: ");
+            view.DisplayMessage("Enter the artist ID to update: ");
             int artistId = view.GetIntInput();
-            view.DisplayMessage("Enter the new artist name");
-            string artistName = view.GetInput();
-            int rowsAffected = storageManager1.UpdateArtistName(artistId, artistName);
+
+            view.DisplayMessage("Enter the new artist name: ");
+            string newName = view.GetInput();
+
+            int rowsAffected = storageManager1.UpdateArtistName(artistId, newName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
-
-
-
-
-
-
         }
+
+
+
+        private static void InsertNewArtist()
+        {
+            view.DisplayMessage("Enter the artist name: ");
+            string name = view.GetInput();
+
+            view.DisplayMessage("Enter the artist's country: ");
+            string country = view.GetInput();
+
+            Artist artist1 = new Artist(0, name, country);
+            int generatedId = storageManager1.InsertArtist(artist1);
+
+            view.DisplayMessage($"New artist inserted with ID: {generatedId}");
+        }
+
+
+
+
+        private static void DeleteArtistByName()
+        {
+            view.DisplayMessage("Enter the name of the artist to delete: ");
+            string name = view.GetInput();
+
+            int rowsAffected = storageManager1.DeleteArtistByName(name);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
 
     }
 }
+
+
 

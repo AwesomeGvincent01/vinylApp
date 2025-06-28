@@ -259,13 +259,64 @@ namespace vinylApp.Repositories
                     {
                         int artistId = Convert.ToInt32(reader["ArtistID"]);
                         string artistName = reader["ArtistName"].ToString();
-                        artists.Add(new Artist(artistId, artistName));
+                        string country = reader["Country"].ToString();
+                        artists.Add(new Artist(artistId, artistName, country));
                     }
                 }
             }
 
             return artists;
         }
+
+
+        public int UpdateArtistName(int artistId, string newName)
+        {
+            using (SqlCommand cmd = new SqlCommand("UPDATE Artist SET ArtistName = @Name WHERE ArtistID = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", newName);
+                cmd.Parameters.AddWithValue("@Id", artistId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+
+        public int InsertArtist(Artist artistTemp)
+        {
+            int newId = GetNextArtistId();
+
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO Artist (ArtistID, ArtistName, Country) VALUES (@Id, @Name, @Country);", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@Name", artistTemp.ArtistName);
+                cmd.Parameters.AddWithValue("@Country", artistTemp.Country);
+                cmd.ExecuteNonQuery();
+                return newId;
+            }
+        }
+
+        private int GetNextArtistId()
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(ArtistID),0)+1 FROM Artist", conn))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+
+
+
+        public int DeleteArtistByName(string artistName)
+        {
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Artist WHERE ArtistName = @Name", conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", artistName);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+
 
 
 
