@@ -14,7 +14,7 @@ namespace vinylApp
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Connecting to the vinyl database system... might take a while, please be patient!!");
+            Console.WriteLine("Connecting to the vinyl database system... may take a while, please be patient.");
             string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
 
 
@@ -52,8 +52,17 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update genre name = input '1', insert genre = input '2', and so on.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine( "please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update genre name, you can see that it is assigned to the number '2', so, if you would\n like to update genre name, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
                         break;
+                        
                 }
             }
         }
@@ -69,7 +78,7 @@ namespace vinylApp
                         view.DisplayCustomers(storageManager1.GetAllCustomers());
                         break;
                     case "2":
-                        UpdateCustomerName();
+                        UpdateCustomer();
                         break;
                     case "3":
                         InsertNewCustomer();
@@ -80,7 +89,15 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update customer name = input '1', insert customer = input '2', and so on.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update customer name, you can see that it is assigned to the number '2', so, if you would\n like to update customer name, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
                         break;
                 }
             }
@@ -108,7 +125,15 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update artist name = input '1', insert artist = input '2', and so on.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update artist name, you can see that it is assigned to the number '2', so, if you would\n like to update artist name, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
                         break;
                 }
             }
@@ -138,7 +163,15 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update record title = input '1', insert record = input '2', and so on.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update record title, you can see that it is assigned to the number '2', so, if you would\n like to update record title, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
                         break;
                 }
             }
@@ -168,7 +201,15 @@ namespace vinylApp
                     case "5":
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option. If you're confused, the options are number based (update order status = input '1', insert new order = input '2', and so on.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update order status, you can see that it is assigned to the number '2', so, if you would\n like to update order status, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
                         break;
                 }
             }
@@ -201,7 +242,15 @@ namespace vinylApp
                         Console.WriteLine("Exiting the program... please wait...");
                         return;
                     default:
-                        Console.WriteLine("Invalid input! please choose a valid option.If you're confused, the options are number based (To Login, input '1', to register/create a new account, input '2', and to exit, input '3'.)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based.\n\n " +
+                            "" +
+                            "For example, if you'd like to login, you can see that it is assigned to the number '1', so, if you would\n like to login, simply input '1' into the program, and if you'd like to register/create a new account, simply input '2'! then, if you would like to exit the program, obviously, input '3'.\n");
+                        Console.ResetColor();
                         break;
                 }
 
@@ -298,7 +347,15 @@ namespace vinylApp
                         currentUser = null;
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based.\n\n " +
+                            "" +
+                            "For example, for the customer menu, you can see that it is assigned to the number '2', so, if you would\n like to access the customer menu, simply input '2' into the program, and so on.\n");
+                        Console.ResetColor();
                         break;
                 }
 
@@ -330,11 +387,19 @@ namespace vinylApp
                         view.DisplayArtists(storageManager1.GetAllArtists());
                         break;
                     case "4":
-                        Console.WriteLine("Logging out...");
+                        Console.WriteLine("Logging out... please wait...");
                         currentUser = null;
                         return;
                     default:
-                        Console.WriteLine("Invalid option.");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("Hello, user! please choose a valid option. If you're confused, the options are number based.\n\n " +
+                            "" +
+                            "For example, for the genre menu, you can see that it is assigned to the number '2', so, if you would\n like to access the customer menu, simply input '2' into the program, and so on.\n");
+                        Console.ResetColor();
                         break;
                 }
             }
@@ -349,7 +414,7 @@ namespace vinylApp
             view.DisplayMessage("Enter a password:");
             string password = view.GetInput();
 
-            view.DisplayMessage("Is this an admin account? (yes/no):");
+            view.DisplayMessage("Make this account admin? (y/n):");
             string isAdminInput = view.GetInput().ToLower();
             bool isAdmin = (isAdminInput == "yes" || isAdminInput == "y");
 
@@ -362,9 +427,9 @@ namespace vinylApp
 
         private static void UpdateGenreName()
         {
-            view.DisplayMessage("Enter the genre_id to update: ");
+            view.DisplayMessage("Enter genre_id to update: ");
             int genreId = view.GetIntInput();
-            view.DisplayMessage("Enter the new genre name");
+            view.DisplayMessage("Enter new genre name");
             string genreName = view.GetInput();
             int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
@@ -389,20 +454,27 @@ namespace vinylApp
         }
 
 
-        private static void UpdateCustomerName()
+        private static void UpdateCustomer()
         {
-            view.DisplayMessage("Enter customer_id to update: ");
+            view.DisplayMessage("Enter customer ID to update: ");
             int customerId = view.GetIntInput();
 
-            view.DisplayMessage("Enter first name: ");
+            view.DisplayMessage("Enter new first name: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter last name: ");
+            view.DisplayMessage("Enter new last name: ");
             string lastName = view.GetInput();
 
-            int rowsAffected = storageManager1.UpdateCustomerName(customerId, firstName, lastName);
+            view.DisplayMessage("Enter new email: ");
+            string email = view.GetInput();
+
+            view.DisplayMessage("Enter new phone number: ");
+            string phoneNumber = view.GetInput();
+
+            int rowsAffected = storageManager1.UpdateCustomer(customerId, firstName, lastName, email, phoneNumber);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
+
 
 
 
@@ -412,23 +484,30 @@ namespace vinylApp
             view.DisplayMessage("Enter first name of new customer: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter first name of new customer: ");
+            view.DisplayMessage("Enter last name of new customer: ");
             string lastName = view.GetInput();
 
-            Customer customer1 = new Customer(0, firstName, lastName);
+            view.DisplayMessage("Enter EMAIL of new customer: ");
+            string email = view.GetInput();
+
+            view.DisplayMessage("Enter phone number of new customer: ");
+            string phoneNumber = view.GetInput();
+
+            Customer customer1 = new Customer(0, firstName, lastName, email, phoneNumber);
             int generatedId = storageManager1.InsertCustomer(customer1);
 
-            view.DisplayMessage($"New customer, '{customer1}' inserted with ID: {generatedId}");
+            view.DisplayMessage($"New customer inserted with ID: {generatedId}");
         }
+
 
 
 
         private static void DeleteCustomerByName()
         {
-            view.DisplayMessage("Enter first name of the customer to delete: ");
+            view.DisplayMessage("Enter first name of customer to delete: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter last name of the customer to delete: ");
+            view.DisplayMessage("Enter last name of customer to delete: ");
             string lastName = view.GetInput();
 
             int rowsAffected = storageManager1.DeleteCustomerByName(firstName, lastName);
@@ -556,7 +635,7 @@ namespace vinylApp
             view.DisplayMessage("Enter order date (format: 0000-00-00): ");
             string date = view.GetInput();
 
-            view.DisplayMessage("Enter order status (e.g. Pending, Shipped): ");
+            view.DisplayMessage("Enter order status (Processing, Cancelled, Shipped, Delivered): ");
             string status = view.GetInput();
 
             Order order1 = new Order(0, customerId, date, status);
@@ -570,7 +649,7 @@ namespace vinylApp
 
         private static void DeleteOrderById()
         {
-            view.DisplayMessage("Enter the order ID to delete: ");
+            view.DisplayMessage("Enter order ID to delete: ");
             int orderId = view.GetIntInput();
 
             int rowsAffected = storageManager1.DeleteOrderById(orderId);

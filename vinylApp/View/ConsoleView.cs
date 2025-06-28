@@ -94,61 +94,66 @@ namespace vinylApp.View
 
         public void DisplayGenres(List<Genre> genres)
         {
-            Console.WriteLine("\nID | Name");
-            Console.WriteLine("-----------");
+            Console.WriteLine("\nID  | Genre Name");
+            Console.WriteLine("----|----------------");
             foreach (Genre genre in genres)
             {
-                Console.WriteLine($"{genre.GenreId}, {genre.GenreName}");
+                Console.WriteLine($"{genre.GenreId,-4} | {genre.GenreName,-15}");
             }
         }
+
 
         public void DisplayCustomers(List<Customer> customers)
-
-
         {
-            Console.WriteLine("\nID  | Name");
-            Console.WriteLine("------------------");
-
+            Console.WriteLine("\nID   | First Name        | Last Name         | Email                      | Phone Number");
+            Console.WriteLine("-----|--------------------|-------------------|-----------------------------|----------------");
             foreach (Customer customer in customers)
             {
-                Console.WriteLine($"{customer.CustomerId}     {customer.FirstName} {customer.LastName}");
+                Console.WriteLine($"{customer.CustomerId,-5} | {customer.FirstName,-18} | {customer.LastName,-17} | {customer.Email,-27} | {customer.PhoneNumber}");
             }
         }
 
-        
+
+
+
 
 
 
         public void DisplayArtists(List<Artist> artists)
         {
-            Console.WriteLine("ID   | Name               | Country");
-            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("ID   | Name                     | Country");
+            Console.WriteLine("-----|--------------------------|--------");
 
-            foreach (Artist artist in artists)
+            foreach (var artist in artists)
             {
-                Console.WriteLine(artist.ArtistId + "    | " + artist.ArtistName + "           | " + artist.Country);
+                Console.WriteLine($"{artist.ArtistId,-5} | {artist.ArtistName,-23} | {artist.Country}");
             }
         }
+
 
 
         public void DisplayRecords(List<Record> records)
         {
-            Console.WriteLine("\nRecordID    | Title          | ReleaseYear | ArtistID | GenreID");
-            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("\nID   | Title                   | Year | ArtistID | GenreID");
+            Console.WriteLine("-----|--------------------------|------|----------|--------");
             foreach (Record record in records)
             {
-                Console.WriteLine($"{record.RecordID},         {record.Title},         {record.ReleaseYear}, ArtistID:                {record.ArtistID}, GenreID: {record.GenreID}");
+                Console.WriteLine($"{record.RecordID,-5} | {record.Title,-25} | {record.ReleaseYear,-4} | {record.ArtistID,-8} | {record.GenreID}");
             }
         }
+
 
 
         public void DisplayOrders(List<Order> orders)
         {
+            Console.WriteLine("\nID   | CustomerID | Date       | Status");
+            Console.WriteLine("-----|------------|------------|--------");
             foreach (Order order in orders)
             {
-                Console.WriteLine($"{order.OrderID}, CustomerID: {order.CustomerID}, Date: {order.OrderDate}, Status: {order.Status}");
+                Console.WriteLine($"{order.OrderID,-5} | {order.CustomerID,-10} | {order.OrderDate,-10} | {order.Status}");
             }
         }
+
 
 
 

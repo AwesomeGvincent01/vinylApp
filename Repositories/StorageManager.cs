@@ -116,54 +116,67 @@ namespace vinylApp.Repositories
         public List<Customer> GetAllCustomers()
         {
             List<Customer> customers = new List<Customer>();
-            string sqlString = "SELECT * FROM Customer";
-
-            using (SqlCommand cmd = new SqlCommand(sqlString, conn))
+            string query = "SELECT * FROM Customer";
+            using (SqlCommand command = new SqlCommand(query, conn))
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        int customerId = Convert.ToInt32(reader["CustomerID"]);
-                        string firstName = reader["FirstName"].ToString();
-                        string lastName = reader["LastName"].ToString();
+                    int id = (int)reader["CustomerID"];
+                    string firstName = reader["FirstName"].ToString();
+                    string lastName = reader["LastName"].ToString();
+                    string email = reader["Email"].ToString();
+                    string phone = reader["PhoneNumber"].ToString();
 
-                        customers.Add(new Customer(customerId, firstName, lastName));
-                    }
+                    customers.Add(new Customer(id, firstName, lastName, email, phone));
                 }
             }
-
             return customers;
         }
 
 
-        public int UpdateCustomerName(int customerId, string firstName, string lastName)
+
+
+        public int UpdateCustomer(int customerId, string firstName, string lastName, string email, string phoneNumber)
         {
-            string sql = "UPDATE Customer SET FirstName = @FirstName, LastName = @LastName WHERE CustomerID = @CustomerId";
+            string sql = @"UPDATE Customer 
+                   SET FirstName = @FirstName, LastName = @LastName, 
+                       Email = @Email, PhoneNumber = @PhoneNumber 
+                   WHERE CustomerID = @CustomerId";
+
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@FirstName", firstName);
                 cmd.Parameters.AddWithValue("@LastName", lastName);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
                 cmd.Parameters.AddWithValue("@CustomerId", customerId);
                 return cmd.ExecuteNonQuery();
             }
         }
 
 
+
         public int InsertCustomer(Customer customerTemp)
         {
             int newId = GetNextCustomerId();
 
-            using (SqlCommand cmd = new SqlCommand(
-                "INSERT INTO Customer (CustomerID, FirstName, LastName) VALUES (@Id, @FirstName, @LastName);", conn))
+            string sql = @"INSERT INTO Customer (CustomerID, FirstName, LastName, Email, PhoneNumber)
+                   VALUES (@Id, @FirstName, @LastName, @Email, @PhoneNumber);";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Id", newId);
                 cmd.Parameters.AddWithValue("@FirstName", customerTemp.FirstName);
                 cmd.Parameters.AddWithValue("@LastName", customerTemp.LastName);
+                cmd.Parameters.AddWithValue("@Email", customerTemp.Email);
+                cmd.Parameters.AddWithValue("@PhoneNumber", customerTemp.PhoneNumber);
                 cmd.ExecuteNonQuery();
-                return newId;
             }
+
+            return newId;
         }
+
 
 
 
