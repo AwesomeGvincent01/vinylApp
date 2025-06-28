@@ -17,7 +17,8 @@ namespace vinylApp.View
             Console.WriteLine("1. Genre Menu");
             Console.WriteLine("2. Customer Menu");
             Console.WriteLine("3. Artist Menu [WIP]");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Record Menu");
+            Console.WriteLine("5. Exit");
             Console.Write("Select an option: ");
 
             return Console.ReadLine();
@@ -86,6 +87,19 @@ namespace vinylApp.View
             }
         }
 
+        public string DisplayRecordMenu()
+        {
+            Console.WriteLine("\n--- Record Menu ---");
+            Console.WriteLine("1. View All Records");
+            Console.WriteLine("2. Update Record Title");
+            Console.WriteLine("3. Insert New Record");
+            Console.WriteLine("4. Delete Record by Title");
+            Console.WriteLine("5. Return to Main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
 
         public void DisplayArtists(List<Artist> artists)
         {
@@ -99,6 +113,15 @@ namespace vinylApp.View
         }
 
 
+        public void DisplayRecords(List<Record> records)
+        {
+            Console.WriteLine("\nRecordID    | Title          | ReleaseYear | ArtistID | GenreID");
+            Console.WriteLine("-----------------------------------");
+            foreach (Record record in records)
+            {
+                Console.WriteLine($"{record.RecordID},         {record.Title},         {record.ReleaseYear}, ArtistID:                {record.ArtistID}, GenreID: {record.GenreID}");
+            }
+        }
 
 
         public void DisplayMessage(string message)

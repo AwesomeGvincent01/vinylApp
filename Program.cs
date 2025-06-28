@@ -36,6 +36,9 @@ namespace vinylApp
                         HandleArtistMenu();
                         break;
                     case "4":
+                        HandleRecordMenu();
+                        break;
+                    case "5":
                         Console.WriteLine("Exiting program...");
                         storageManager1.CloseConnection();
                         return;
@@ -133,6 +136,39 @@ namespace vinylApp
                 }
             }
         }
+
+
+
+        private static void HandleRecordMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayRecordMenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        break;
+                    case "2":
+                        UpdateRecordTitle();
+                        break;
+                    case "3":
+                        InsertNewRecord();
+                        break;
+                    case "4":
+                        DeleteRecordByTitle();
+                        break;
+                    case "5":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
+
+
 
 
 
@@ -250,6 +286,55 @@ namespace vinylApp
             string name = view.GetInput();
 
             int rowsAffected = storageManager1.DeleteArtistByName(name);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
+
+        private static void UpdateRecordTitle()
+        {
+            view.DisplayMessage("Enter the record ID to update: ");
+            int recordId = view.GetIntInput();
+
+            view.DisplayMessage("Enter the new record title: ");
+            string newTitle = view.GetInput();
+
+            int rowsAffected = storageManager1.UpdateRecordTitle(recordId, newTitle);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+        }
+
+
+
+
+        private static void InsertNewRecord()
+        {
+            view.DisplayMessage("Enter the record title: ");
+            string title = view.GetInput();
+
+            view.DisplayMessage("Enter the release year: ");
+            int year = view.GetIntInput();
+
+            view.DisplayMessage("Enter the Artist ID: ");
+            int artistId = view.GetIntInput();
+
+            view.DisplayMessage("Enter the Genre ID: ");
+            int genreId = view.GetIntInput();
+
+            Record record1 = new Record(0, title, year, artistId, genreId);
+            int generatedId = storageManager1.InsertRecord(record1);
+
+            view.DisplayMessage($"New record inserted with ID: {generatedId}");
+        }
+
+
+
+
+        private static void DeleteRecordByTitle()
+        {
+            view.DisplayMessage("Enter the title of the record to delete: ");
+            string title = view.GetInput();
+
+            int rowsAffected = storageManager1.DeleteRecordByTitle(title);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
 

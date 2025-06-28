@@ -6,7 +6,22 @@ using System.Threading.Tasks;
 
 namespace vinylApp.Model
 {
-    internal class Record
+    public class Record
     {
+        public int RecordID { get; set; }
+        public string Title { get; set; }
+        public int ReleaseYear { get; set; }
+        public int ArtistID { get; set; }
+        public int GenreID { get; set; }
+
+        public Record(int recordId, string title, int releaseYear, int artistId, int genreId)
+        {
+            RecordID = recordId;
+            Title = title;
+            ReleaseYear = releaseYear;
+            ArtistID = artistId;
+            GenreID = genreId;
+        }
     }
 }
+

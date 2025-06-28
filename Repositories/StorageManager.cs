@@ -319,6 +319,79 @@ namespace vinylApp.Repositories
 
 
 
+        public List<Record> GetAllRecords()
+        {
+            List<Record> records = new List<Record>();
+            string sql = "SELECT * FROM Record";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int recordId = Convert.ToInt32(reader["RecordID"]);
+                        string title = reader["Title"].ToString();
+                        int releaseYear = Convert.ToInt32(reader["ReleaseYear"]);
+                        int artistId = Convert.ToInt32(reader["ArtistID"]);
+                        int genreId = Convert.ToInt32(reader["GenreID"]);
+
+                        records.Add(new Record(recordId, title, releaseYear, artistId, genreId));
+                    }
+                }
+            }
+
+            return records;
+        }
+
+
+        public int UpdateRecordTitle(int recordId, string newTitle)
+        {
+            using (SqlCommand cmd = new SqlCommand("UPDATE Record SET Title = @Title WHERE RecordID = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Title", newTitle);
+                cmd.Parameters.AddWithValue("@Id", recordId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        private int GetNextRecordId()
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(RecordID),0)+1 FROM Record", conn))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+
+        public int InsertRecord(Record recordTemp)
+        {
+            int newId = GetNextRecordId();
+
+            using (SqlCommand cmd = new SqlCommand(
+                "INSERT INTO Record (RecordID, Title, ReleaseYear, ArtistID, GenreID) VALUES (@Id, @Title, @Year, @ArtistId, @GenreId);", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", newId);
+                cmd.Parameters.AddWithValue("@Title", recordTemp.Title);
+                cmd.Parameters.AddWithValue("@Year", recordTemp.ReleaseYear);
+                cmd.Parameters.AddWithValue("@ArtistId", recordTemp.ArtistID);
+                cmd.Parameters.AddWithValue("@GenreId", recordTemp.GenreID);
+                cmd.ExecuteNonQuery();
+                return newId;
+            }
+        }
+        
+
+
+
+        public int DeleteRecordByTitle(string title)
+        {
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Record WHERE Title = @Title", conn))
+            {
+                cmd.Parameters.AddWithValue("@Title", title);
+                return cmd.ExecuteNonQuery();
+            }
+        }
 
 
 
