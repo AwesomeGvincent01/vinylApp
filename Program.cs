@@ -11,8 +11,10 @@ namespace vinylApp
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, Admin!");
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
+
+            Console.WriteLine("Hello, Earth!");
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\ac148838\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
+
 
             storageManager1 = new StorageManager(connectionString);
             view = new ConsoleView();
@@ -207,5 +209,27 @@ namespace vinylApp
             int rowsAffected = storageManager1.DeleteCustomerByName(firstName, lastName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
         }
+
+
+
+
+
+        private static void UpdateArtistName()
+        {
+            view.DisplayMessage("Enter the artist_id to update: ");
+            int artistId = view.GetIntInput();
+            view.DisplayMessage("Enter the new artist name");
+            string artistName = view.GetInput();
+            int rowsAffected = storageManager1.UpdateArtistName(artistId, artistName);
+            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+
+
+
+
+
+        }
+
     }
 }
+

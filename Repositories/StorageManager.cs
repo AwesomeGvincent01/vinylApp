@@ -107,7 +107,7 @@ namespace vinylApp.Repositories
 
 
 
-        //test
+        //customer
 
         public List<Customer> GetAllCustomers()
         {
@@ -167,13 +167,34 @@ namespace vinylApp.Repositories
         public int DeleteCustomerByName(string firstName, string lastName)
         {
             using (SqlCommand cmd = new SqlCommand(
-                "DELETE FROM Customer WHERE FirstName = @FirstName AND LastName = @LastName", conn))
+                "SELECT CustomerID FROM Customer WHERE FirstName = @FirstName AND LastName = @LastName", conn))
             {
                 cmd.Parameters.AddWithValue("@FirstName", firstName);
                 cmd.Parameters.AddWithValue("@LastName", lastName);
-                return cmd.ExecuteNonQuery();
+
+                object result = cmd.ExecuteScalar();
+                if (result == null)
+                {
+                    Console.WriteLine("Customer not found.");
+                    return 0;
+                }
+
+                int customerId = Convert.ToInt32(result);
+
+                if (CustomerHasOrders(customerId))
+                {
+                    Console.WriteLine("This customer cannot be deleted because they have existing orders.");
+                    return 0;
+                }
+
+                using (SqlCommand deleteCmd = new SqlCommand("DELETE FROM Customer WHERE CustomerID = @CustomerID", conn))
+                {
+                    deleteCmd.Parameters.AddWithValue("@CustomerID", customerId);
+                    return deleteCmd.ExecuteNonQuery();
+                }
             }
         }
+
 
 
 
@@ -186,6 +207,67 @@ namespace vinylApp.Repositories
                 return (int)cmd.ExecuteScalar();
             }
         }
+
+
+
+
+        public bool CustomerHasOrders(int customerId)
+        {
+            string sql = "SELECT COUNT(*) FROM [Order] WHERE CustomerID = @CustomerID";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerID", customerId);
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
+
+
+
+        public int GetCustomerIdByName(string name)
+        {
+            string sql = "SELECT CustomerID FROM Customer WHERE FirstName = @Name";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", name);
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : -1;
+            }
+        }
+
+
+
+
+
+
+        //Artist
+
+
+        public List<Artist> GetAllArtists()
+        {
+            List<Artist> artists = new List<Artist>();
+            string sqlString = "SELECT * FROM Artist";
+
+            using (SqlCommand cmd = new SqlCommand(sqlString, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int artistId = Convert.ToInt32(reader["ArtistID"]);
+                        string artistName = reader["ArtistName"].ToString();
+                        artists.Add(new Artist(artistId, artistName));
+                    }
+                }
+            }
+
+            return artists;
+        }
+
+
 
 
 

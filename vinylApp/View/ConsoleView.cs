@@ -19,6 +19,7 @@ namespace vinylApp.View
             Console.WriteLine("3. Artist Menu [WIP]");
             Console.WriteLine("4. Exit");
             Console.Write("Select an option: ");
+
             return Console.ReadLine();
         }
 
@@ -75,6 +76,15 @@ namespace vinylApp.View
             foreach (Customer customer in customers)
             {
                 Console.WriteLine($"{customer.CustomerId}, {customer.FirstName}, {customer.LastName}");
+            }
+        }
+
+
+        public void DisplayArtists(List<Artist> artists)
+        {
+            foreach (Artist artist in artists)
+            {
+                Console.WriteLine($"{artist.ArtistId}, {artist.ArtistName}");
             }
         }
 
