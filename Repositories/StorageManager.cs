@@ -359,23 +359,32 @@ namespace vinylApp.Repositories
             return records;
         }
 
-        public List<Record> GetAllRecords()
+        public List<string[]> GetAllRecords()
         {
-            List<Record> records = new List<Record>();
-            string sql = "SELECT * FROM Record";
+            List<string[]> records = new List<string[]>();
 
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
-            using (SqlDataReader reader = cmd.ExecuteReader())
+            string query = @"SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName AS ArtistName, Genre.Name AS GenreName
+FROM Record JOIN Artist ON Record.ArtistID = Artist.ArtistID JOIN Genre ON Record.GenreID = Genre.GenreID
+ORDER BY Record.Title;
+";
+
+
+            using (SqlCommand command = new SqlCommand(query, conn))
             {
-                while (reader.Read())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    int recordId = Convert.ToInt32(reader["RecordID"]);
-                    string title = reader["Title"].ToString();
-                    int releaseYear = Convert.ToInt32(reader["ReleaseYear"]);
-                    int artistId = Convert.ToInt32(reader["ArtistID"]);
-                    int genreId = Convert.ToInt32(reader["GenreID"]);
-
-                    records.Add(new Record(recordId, title, releaseYear, artistId, genreId));
+                    while (reader.Read())
+                    {
+                        string[] row = new string[]
+                        {
+                    reader["RecordID"].ToString(),
+                    reader["Title"].ToString(),
+                    reader["ReleaseYear"].ToString(),
+                    reader["ArtistName"].ToString(),
+                    reader["GenreName"].ToString()
+                        };
+                        records.Add(row);
+                    }
                 }
             }
 

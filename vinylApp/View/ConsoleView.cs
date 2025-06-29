@@ -148,6 +148,17 @@ namespace vinylApp.View
         }
 
 
+        public void DisplayRecords(List<string[]> records)
+{
+    Console.WriteLine("\nID   | Title                   | Year | Artist      | Genre");
+    Console.WriteLine("-----|--------------------------|------|-------------|--------");
+    foreach (string[] record in records)
+    {
+        Console.WriteLine($"{record[0],-5} | {record[1],-25} | {record[2],-4} | {record[3],-11} | {record[4]}");
+    }
+}
+
+
 
         public void DisplayOrders(List<Order> orders)
         {
