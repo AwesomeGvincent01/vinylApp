@@ -336,30 +336,53 @@ namespace vinylApp.Repositories
 
 
 
+        public List<Record> GetRecordsByTitle(string keyword)
+        {
+            List<Record> records = new List<Record>();
+            string sql = "SELECT * FROM Record WHERE Title LIKE @Keyword";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Keyword", "%" + keyword + "%");
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = Convert.ToInt32(reader["RecordID"]);
+                        string title = reader["Title"].ToString();
+                        int year = Convert.ToInt32(reader["ReleaseYear"]);
+                        int artistId = Convert.ToInt32(reader["ArtistID"]);
+                        int genreId = Convert.ToInt32(reader["GenreID"]);
+                        records.Add(new Record(id, title, year, artistId, genreId));
+                    }
+                }
+            }
+            return records;
+        }
+
         public List<Record> GetAllRecords()
         {
             List<Record> records = new List<Record>();
             string sql = "SELECT * FROM Record";
 
             using (SqlCommand cmd = new SqlCommand(sql, conn))
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        int recordId = Convert.ToInt32(reader["RecordID"]);
-                        string title = reader["Title"].ToString();
-                        int releaseYear = Convert.ToInt32(reader["ReleaseYear"]);
-                        int artistId = Convert.ToInt32(reader["ArtistID"]);
-                        int genreId = Convert.ToInt32(reader["GenreID"]);
+                    int recordId = Convert.ToInt32(reader["RecordID"]);
+                    string title = reader["Title"].ToString();
+                    int releaseYear = Convert.ToInt32(reader["ReleaseYear"]);
+                    int artistId = Convert.ToInt32(reader["ArtistID"]);
+                    int genreId = Convert.ToInt32(reader["GenreID"]);
 
-                        records.Add(new Record(recordId, title, releaseYear, artistId, genreId));
-                    }
+                    records.Add(new Record(recordId, title, releaseYear, artistId, genreId));
                 }
             }
 
             return records;
         }
+
+
 
 
         public int UpdateRecordTitle(int recordId, string newTitle)
@@ -410,6 +433,43 @@ namespace vinylApp.Repositories
             }
         }
 
+        public List<Record> SortRecordsByTitle()
+        {
+            var records = new List<Record>();
+            string sql = "SELECT * FROM Record ORDER BY Title ASC";
+            using var cmd = new SqlCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                records.Add(new Record(
+                    (int)reader["RecordID"],
+                    reader["Title"].ToString(),
+                    (int)reader["ReleaseYear"],
+                    (int)reader["ArtistID"],
+                    (int)reader["GenreID"]
+                ));
+            }
+            return records;
+        }
+
+        public List<Record> SortRecordsByYear()
+        {
+            var records = new List<Record>();
+            string sql = "SELECT * FROM Record ORDER BY ReleaseYear ASC";
+            using var cmd = new SqlCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                records.Add(new Record(
+                    (int)reader["RecordID"],
+                    reader["Title"].ToString(),
+                    (int)reader["ReleaseYear"],
+                    (int)reader["ArtistID"],
+                    (int)reader["GenreID"]
+                ));
+            }
+            return records;
+        }
 
 
 

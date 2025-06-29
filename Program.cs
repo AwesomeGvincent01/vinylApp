@@ -143,25 +143,53 @@ namespace vinylApp
 
         private static void HandleRecordMenu()
         {
-            while (true)
+            bool recordMenuActive = true;
+            while (recordMenuActive)
             {
                 string choice = view.DisplayRecordMenu();
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        var all = storageManager1.GetAllRecords();
+                        view.DisplayRecords(all);
                         break;
+
                     case "2":
                         UpdateRecordTitle();
                         break;
+
                     case "3":
                         InsertNewRecord();
                         break;
+
                     case "4":
                         DeleteRecordByTitle();
                         break;
+
+
                     case "5":
-                        return;
+                        Console.Write("Enter title keyword to search: ");
+                        var keyword = view.GetInput();
+                        var results = storageManager1.GetRecordsByTitle(keyword);
+                        view.DisplayRecords(results);
+                        break;
+
+                    case "6":
+                        var sortedByTitle = storageManager1.SortRecordsByTitle();
+                        view.DisplayRecords(sortedByTitle);
+                        break;
+
+                    case "7":
+                        var sortedByYear = storageManager1.SortRecordsByYear();
+                        view.DisplayRecords(sortedByYear);
+                        break;
+
+                    case "8":
+                        recordMenuActive = false;
+                        break;
+
+
+
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("\nInvalid input! ");
@@ -408,8 +436,9 @@ namespace vinylApp
 
         private static void CreateUser()
         {
-            view.DisplayMessage("Enter a username for the new user:");
+            Console.Write("Enter a new username: ");
             string username = view.GetInput();
+
 
             view.DisplayMessage("Enter a password:");
             string password = view.GetInput();
