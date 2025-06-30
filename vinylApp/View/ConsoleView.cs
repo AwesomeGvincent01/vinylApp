@@ -16,7 +16,7 @@ namespace vinylApp.View
             Console.WriteLine("Main Menu:");
             Console.WriteLine("1. Genre Menu");
             Console.WriteLine("2. Customer Menu");
-            Console.WriteLine("3. Artist Menu [WIP]");
+            Console.WriteLine("3. Artist Menu");
             Console.WriteLine("4. Record Menu");
             Console.WriteLine("5. Order Menu");
             Console.WriteLine("6. Create User/Admin Account");
@@ -71,13 +71,25 @@ namespace vinylApp.View
             Console.WriteLine("2. Update Record Title");
             Console.WriteLine("3. Insert New Record");
             Console.WriteLine("4. Delete Record by Title");
-            Console.WriteLine("5. Search Records by Title");
-            Console.WriteLine("6. Sort Records by title (ascending)");
-            Console.WriteLine("7. Sort Records by years");
-            Console.WriteLine("8. Return to Main Menu");
+            Console.WriteLine("5. Return to Main Menu");
             Console.Write("Select an option: ");
             return Console.ReadLine();
         }
+
+        public string DisplayRecordSubmenu()
+        {
+            Console.WriteLine("\n--- How would you like to view records? pick below: ---");
+            Console.WriteLine("1. View All Records");
+            Console.WriteLine("2. Search by Title");
+            Console.WriteLine("3. Search by Artist");
+            Console.WriteLine("4. Sort by Title (Ascending)");
+            Console.WriteLine("5. Sort by Year (Newest to Oldest)");
+            Console.WriteLine("6. Return to Record Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
 
 
 

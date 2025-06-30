@@ -57,12 +57,12 @@ namespace vinylApp
                         Console.ResetColor();
                         Console.ForegroundColor = ConsoleColor.White;
 
-                        Console.WriteLine( "please choose a valid option. If you're confused, the options are number based\n\n " +
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
                             "" +
                             "For example, if you'd like to update genre name, you can see that it is assigned to the number '2', so, if you would\n like to update genre name, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
                         break;
-                        
+
                 }
             }
         }
@@ -150,9 +150,9 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-                        var all = storageManager1.GetAllRecords();
-                        view.DisplayRecords(all);
+                        HandleRecordSubmenu();
                         break;
+
 
                     case "2":
                         UpdateRecordTitle();
@@ -167,25 +167,9 @@ namespace vinylApp
                         break;
 
 
+
                     case "5":
-                        Console.Write("Enter title keyword to search: ");
-                        var keyword = view.GetInput();
-                        var results = storageManager1.GetRecordsByTitle(keyword);
-                        view.DisplayRecords(results);
-                        break;
-
-                    case "6":
-                        var sortedByTitle = storageManager1.SortRecordsByTitle();
-                        view.DisplayRecords(sortedByTitle);
-                        break;
-
-                    case "7":
-                        var sortedByYear = storageManager1.SortRecordsByYear();
-                        view.DisplayRecords(sortedByYear);
-                        break;
-
-                    case "8":
-                        recordMenuActive = false;
+                        recordMenuActive = false; //exit
                         break;
 
 
@@ -204,6 +188,55 @@ namespace vinylApp
                 }
             }
         }
+
+        private static void HandleRecordSubmenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayRecordSubmenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        break;
+                    case "2":
+                        Console.Write("Enter title: ");
+                        string titleKeyword = Console.ReadLine();
+                        view.DisplayRecords(storageManager1.GetRecordsByTitle(titleKeyword));
+                        break;
+                    case "3":
+                        Console.Write("Enter artist/band name: ");
+                        string artistKeyword = Console.ReadLine();
+                        view.DisplayRecords(storageManager1.SearchRecordsByArtist(artistKeyword));
+                        break;
+                    case "4":
+                        view.DisplayRecords(storageManager1.SortRecordsByTitle());
+                        break;
+                    case "5":
+                        view.DisplayRecords(storageManager1.SortRecordsByYear());
+                        break;
+
+                    case "6":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to search for records by title, you can see that it is assigned to the number '2', so, if you would\n like to search for records by title, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+
+                Console.WriteLine("\nContinue? (enter)");
+                Console.ReadLine();
+            }
+        }
+
+
 
 
 
@@ -349,8 +382,8 @@ namespace vinylApp
             while (true)
             {
                 string choice = view.DisplayMainMenu();
-               
-                  switch (choice)
+
+                switch (choice)
                 {
                     case "1":
                         HandleGenreMenu();
@@ -389,7 +422,7 @@ namespace vinylApp
 
             }
         }
-    
+
 
         private static void HandleUserMainMenu()
         {

@@ -363,11 +363,14 @@ namespace vinylApp.Repositories
         {
             List<string[]> records = new List<string[]>();
 
-            string query = @"SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName AS ArtistName, Genre.Name AS GenreName
-FROM Record JOIN Artist ON Record.ArtistID = Artist.ArtistID JOIN Genre ON Record.GenreID = Genre.GenreID
-ORDER BY Record.Title;
-";
-
+            string query = @"
+        SELECT Record.RecordID, Record.Title, Record.ReleaseYear, 
+               Artist.ArtistName AS ArtistName, 
+               Genre.Name AS GenreName
+        FROM Record 
+        JOIN Artist ON Record.ArtistID = Artist.ArtistID 
+        JOIN Genre ON Record.GenreID = Genre.GenreID
+        ORDER BY Record.RecordID;";
 
             using (SqlCommand command = new SqlCommand(query, conn))
             {
@@ -390,6 +393,38 @@ ORDER BY Record.Title;
 
             return records;
         }
+
+
+
+        public List<string[]> SearchRecordsByArtist(string keyword)
+        {
+            var records = new List<string[]>();
+            string sql = @"
+      SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName AS ArtistName, Genre.Name      AS GenreName
+FROM Record
+      JOIN Artist ON Record.ArtistID = Artist.ArtistID
+      JOIN Genre ON Record.GenreID  = Genre.GenreID
+      WHERE Artist.ArtistName LIKE @input
+      ORDER BY Record.Title;";
+
+            using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@input", "%" + keyword + "%");
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                records.Add(new[] {
+          reader["RecordID"].ToString(),
+          reader["Title"].ToString(),
+          reader["ReleaseYear"].ToString(),
+          reader["ArtistName"].ToString(),
+          reader["GenreName"].ToString()
+        });
+            }
+
+            return records;
+        }
+
+
 
 
 
