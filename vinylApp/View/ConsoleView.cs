@@ -67,7 +67,7 @@ namespace vinylApp.View
         public string DisplayRecordMenu()
         {
             Console.WriteLine("\n--- Record Menu ---");
-            Console.WriteLine("1. View All Records");
+            Console.WriteLine("1. View Records");
             Console.WriteLine("2. Update Record Title");
             Console.WriteLine("3. Insert New Record");
             Console.WriteLine("4. Delete Record by Title");
@@ -78,19 +78,46 @@ namespace vinylApp.View
 
         public string DisplayRecordSubmenu()
         {
-            Console.WriteLine("\n--- How would you like to view records? pick below: ---");
+            Console.Clear();
+            Console.WriteLine("--- How would you like to view records? pick below: ---");
             Console.WriteLine("1. View All Records");
             Console.WriteLine("2. Search by Title");
             Console.WriteLine("3. Search by Artist");
             Console.WriteLine("4. Sort by Title (Ascending)");
             Console.WriteLine("5. Sort by Year (Newest to Oldest)");
-            Console.WriteLine("6. Return to Record Menu");
+            Console.WriteLine("6. Advanced Filters");
+            Console.WriteLine("7. Return to Record Menu");
             Console.Write("Select an option: ");
             return Console.ReadLine();
         }
 
 
+        public string DisplayYearRangeFilterMenu()
+        {
+            Console.WriteLine("\n--- Filter Record By Year Range ---");
+            Console.WriteLine("How would you like to search?");
+            Console.WriteLine("1. Specific Range (example: 1990 - 2000)");
+            Console.WriteLine("2. Non-Specific (example: all from the 1980s)");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
 
+        public void DisplayMessage1(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
+        public void PromptInputMessage(string msg)
+        {
+            Console.Write(msg);
+        }
+
+
+        public void DisplayError11(string msg)
+        {
+            Console.WriteLine(msg);
+
+        }
 
 
 
@@ -105,6 +132,17 @@ namespace vinylApp.View
             Console.Write("Select a option: ");
             return Console.ReadLine();
         }
+
+        public string DisplayRecordsSubSubMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("--- Advanced Record Filters ---");
+            Console.WriteLine("1. Filter by year range");
+            Console.WriteLine("2. Return to previous menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
 
 
 

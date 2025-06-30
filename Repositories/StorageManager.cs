@@ -425,6 +425,42 @@ FROM Record
         }
 
 
+        public List<string[]> GetRecordsByYearRange(int startYear, int endYear)
+        {
+            List<string[]> records = new List<string[]>();
+
+            string query = @"
+        SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName, Genre.Name
+        FROM Record JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        JOIN Genre ON Record.GenreID = Genre.GenreID
+        WHERE Record.ReleaseYear BETWEEN @endYear AND @startYear
+        ORDER BY Record.ReleaseYear;";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@startYear", startYear);
+                cmd.Parameters.AddWithValue("@endYear", endYear);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string[] row = new string[]
+                        {
+                    reader["RecordID"].ToString(),
+                    reader["Title"].ToString(),
+                    reader["ReleaseYear"].ToString(),
+                    reader["ArtistName"].ToString(),
+                    reader["Name"].ToString()
+                        };
+                        records.Add(row);
+                    }
+                }
+            }
+
+            return records;
+        }
+
 
 
 

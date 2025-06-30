@@ -215,8 +215,10 @@ namespace vinylApp
                     case "5":
                         view.DisplayRecords(storageManager1.SortRecordsByYear());
                         break;
-
                     case "6":
+                        HandleRecordsSubSubMenu();
+                        break;
+                    case "7":
                         return;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -234,6 +236,72 @@ namespace vinylApp
                 Console.WriteLine("\nContinue? (enter)");
                 Console.ReadLine();
             }
+        }
+
+
+        private static void HandleRecordsSubSubMenu()
+        {
+            while (true)
+            {
+                string input = view.DisplayRecordsSubSubMenu();
+
+                switch (input)
+                {
+                    case "1":
+                        FilterRecordsByYearRange();
+                        break;
+                    case "2":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to filter by year range, you can see that it is assigned to the number '1', so, if you would\n like to filter by year range, simply input '1' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
+            }
+        }
+
+
+
+        private static void FilterRecordsByYearRange()
+        {
+            string choice = view.DisplayYearRangeFilterMenu();
+
+            int startYear = 0;
+            int endYear = 0;
+
+            if (choice == "1")
+            {
+                view.PromptInputMessage("Enter start year: ");
+                startYear = view.GetIntInput();
+
+
+                view.DisplayMessage("Enter end year: ");
+                endYear = view.GetIntInput();
+            }
+            else if (choice == "2")
+            {
+                view.DisplayMessage1("Enter a decade (example: 1980): ");
+                startYear = view.GetIntInput();
+                endYear = startYear + 9;
+            }
+            else
+            {
+                view.DisplayError11("Invalid input! please choose one of the 2 options below");
+                return;
+            }
+
+            var results = storageManager1.GetRecordsByYearRange(startYear, endYear);
+            view.DisplayRecords(results);
         }
 
 
