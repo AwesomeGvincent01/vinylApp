@@ -11,6 +11,7 @@ namespace vinylApp.View
     {
         public string DisplayMainMenu()
         {
+            Console.Clear();
             Console.WriteLine("\nWelcome to the vinyl record database system");
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("Main Menu:");
@@ -29,6 +30,7 @@ namespace vinylApp.View
 
         public string DisplayGenreMenu()
         {
+            Console.Clear();
             Console.WriteLine("\n--- Genre Menu ---");
             Console.WriteLine("1. View All Genres");
             Console.WriteLine("2. Update Genre Name by ID");
@@ -41,6 +43,7 @@ namespace vinylApp.View
 
         public string DisplayCustomerMenu()
         {
+            Console.Clear();
             Console.WriteLine("\n--- Customer Menu ---");
             Console.WriteLine("1. View All Customers");
             Console.WriteLine("2. Update Customer Name by ID");
@@ -53,6 +56,7 @@ namespace vinylApp.View
 
         public string DisplayArtistMenu()
         {
+            Console.Clear();
             Console.WriteLine("\n--- Artist Menu ---");
             Console.WriteLine("1. View All Artists");
             Console.WriteLine("2. Update Artist Name by ID");
@@ -66,6 +70,7 @@ namespace vinylApp.View
 
         public string DisplayRecordMenu()
         {
+            Console.Clear();
             Console.WriteLine("\n--- Record Menu ---");
             Console.WriteLine("1. View Records");
             Console.WriteLine("2. Update Record Title");
