@@ -30,7 +30,7 @@ namespace vinylApp.View
 
         public string DisplayGenreMenu()
         {
-            Console.Clear();
+         
             Console.WriteLine("\n--- Genre Menu ---");
             Console.WriteLine("1. View All Genres");
             Console.WriteLine("2. Update Genre Name by ID");
@@ -43,7 +43,7 @@ namespace vinylApp.View
 
         public string DisplayCustomerMenu()
         {
-            Console.Clear();
+         
             Console.WriteLine("\n--- Customer Menu ---");
             Console.WriteLine("1. View All Customers");
             Console.WriteLine("2. Update Customer Name by ID");
@@ -56,7 +56,7 @@ namespace vinylApp.View
 
         public string DisplayArtistMenu()
         {
-            Console.Clear();
+           
             Console.WriteLine("\n--- Artist Menu ---");
             Console.WriteLine("1. View All Artists");
             Console.WriteLine("2. Update Artist Name by ID");
@@ -83,7 +83,7 @@ namespace vinylApp.View
 
         public string DisplayRecordSubmenu()
         {
-            Console.Clear();
+            
             Console.WriteLine("--- How would you like to view records? pick below: ---");
             Console.WriteLine("1. View All Records");
             Console.WriteLine("2. Search by Title");

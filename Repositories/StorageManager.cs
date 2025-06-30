@@ -285,6 +285,8 @@ namespace vinylApp.Repositories
             return artists;
         }
 
+       
+
 
         public int UpdateArtistName(int artistId, string newName)
         {

@@ -34,6 +34,7 @@ namespace vinylApp
         {
             while (true)
             {
+               
                 string choice = view.DisplayGenreMenu();
                 switch (choice)
                 {
@@ -71,6 +72,7 @@ namespace vinylApp
         {
             while (true)
             {
+              
                 string choice = view.DisplayCustomerMenu();
                 switch (choice)
                 {
@@ -107,6 +109,7 @@ namespace vinylApp
         {
             while (true)
             {
+               
                 string choice = view.DisplayArtistMenu();
                 switch (choice)
                 {
@@ -146,6 +149,7 @@ namespace vinylApp
             bool recordMenuActive = true;
             while (recordMenuActive)
             {
+              
                 string choice = view.DisplayRecordMenu();
                 switch (choice)
                 {
