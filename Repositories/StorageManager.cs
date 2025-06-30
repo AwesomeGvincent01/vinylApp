@@ -421,7 +421,7 @@ FROM Record
         });
             }
 
-            return records;
+            return records; 
         }
 
 
@@ -433,7 +433,7 @@ FROM Record
         SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName, Genre.Name
         FROM Record JOIN Artist ON Record.ArtistID = Artist.ArtistID
         JOIN Genre ON Record.GenreID = Genre.GenreID
-        WHERE Record.ReleaseYear BETWEEN @endYear AND @startYear
+        WHERE Record.ReleaseYear BETWEEN @startYear AND @endYear
         ORDER BY Record.ReleaseYear;";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
