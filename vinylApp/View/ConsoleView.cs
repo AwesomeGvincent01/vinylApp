@@ -67,6 +67,18 @@ namespace vinylApp.View
             return Console.ReadLine();
         }
 
+        public string DisplayArtistSubmenu()
+        {
+            Console.WriteLine("\n--- View Artists ---");
+            Console.WriteLine("1. View Artists");
+            Console.WriteLine("2. Search by Name");
+            Console.WriteLine("3. Sort Alphabetically");
+            Console.WriteLine("4. Return to main Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
 
         public string DisplayRecordMenu()
         {
@@ -189,6 +201,8 @@ namespace vinylApp.View
                 Console.WriteLine($"{artist.ArtistId,-5} | {artist.ArtistName,-23} | {artist.Country}");
             }
         }
+
+
 
 
 

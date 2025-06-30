@@ -114,7 +114,7 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayArtists(storageManager1.GetAllArtists());
+                        ArtistSubMenu();
                         break;
                     case "2":
                         UpdateArtistName();
@@ -139,6 +139,45 @@ namespace vinylApp
                         Console.ResetColor();
                         break;
                 }
+            }
+        }
+
+
+        private static void ArtistSubMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayArtistSubmenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayArtists(storageManager1.GetAllArtists());
+                        break;
+                    case "2":
+                        Console.Write("Enter name keyword: ");
+                        string keyword = Console.ReadLine();
+                        view.DisplayArtists(storageManager1.SearchArtistsByName(keyword));
+                        break;
+                    case "3":
+                        view.DisplayArtists(storageManager1.SortArtistsByName());
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to update record title, you can see that it is assigned to the number '2', so, if you would\n like to update record title, simply input '2' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+
+                Console.WriteLine("\nContinue? (enter)");
+                Console.ReadLine();
             }
         }
 
@@ -269,7 +308,7 @@ namespace vinylApp
                         break;
                 }
 
-                Console.WriteLine("\nPress Enter to continue...");
+                Console.WriteLine("\nContinue? (enter)");
                 Console.ReadLine();
             }
         }

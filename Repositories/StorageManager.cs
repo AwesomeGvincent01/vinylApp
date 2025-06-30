@@ -285,7 +285,53 @@ namespace vinylApp.Repositories
             return artists;
         }
 
-       
+        public List<Artist> SearchArtistsByName(string nameKeyword)
+        {
+            List<Artist> artists = new List<Artist>();
+            string query = "SELECT * FROM Artist WHERE ArtistName LIKE @kw";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@kw", "%" + nameKeyword + "%");
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        artists.Add(new Artist(
+    Convert.ToInt32(reader["ArtistID"]),
+    reader["ArtistName"].ToString(),
+    reader["Country"].ToString()
+));
+
+                    }
+                }
+            }
+
+            return artists;
+        }
+
+        public List<Artist> SortArtistsByName()
+        {
+            List<Artist> artists = new List<Artist>();
+            string query = "SELECT * FROM Artist ORDER BY ArtistName ASC";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    artists.Add(new Artist(
+    Convert.ToInt32(reader["ArtistID"]),
+    reader["ArtistName"].ToString(),
+    reader["Country"].ToString()
+));
+
+                }
+            }
+
+            return artists;
+        }
+
 
 
         public int UpdateArtistName(int artistId, string newName)
