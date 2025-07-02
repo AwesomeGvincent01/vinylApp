@@ -273,7 +273,7 @@ namespace vinylApp.View
                 {
                     Console.WriteLine($"{c.CustomerId,-5} | {c.FirstName,-18} | {c.LastName,-18} | {c.Email,-28} | {c.PhoneNumber}");
                 }
-
+                Console.WriteLine("N - Next       P = Previous        Q - Quit");
                 Console.WriteLine($"\n{currentPage}/{totalPages}");
 
                 string input = Console.ReadLine();
@@ -335,7 +335,7 @@ namespace vinylApp.View
                 {
                     Console.WriteLine($"{r.RecordID,-5} | {r.Title,-25} | {r.ReleaseYear,-4} | {r.ArtistName,-11} | {r.GenreName}");
                 }
-
+                Console.WriteLine("N - Next       P = Previous        Q - Quit");
                 Console.WriteLine($"\n{currentPage}/{totalPages}");
 
                 string input = Console.ReadLine();

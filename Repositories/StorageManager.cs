@@ -762,20 +762,25 @@ namespace vinylApp.Repositories
 
 
 
-        public List<Order> GetAllOrders()
+        public List<Order> GetOrders(User viewer)
         {
             List<Order> orders = new List<Order>();
-            string sql = "SELECT * FROM [Order]";
+
+            string sql = viewer.Role == "Customer"
+                ? "SELECT * FROM [Order] WHERE CustomerID = @cid"
+                : "SELECT * FROM [Order]";
 
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
+                if (viewer.Role == "Customer")
+                    cmd.Parameters.AddWithValue("@cid", viewer.UserID);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         orders.Add(readordertest(reader));
                     }
-
                 }
             }
 
@@ -783,7 +788,8 @@ namespace vinylApp.Repositories
         }
 
 
-     
+
+
 
         public List<Order> GetOrdersByCustomerId(int customerId)
         {
@@ -925,24 +931,23 @@ namespace vinylApp.Repositories
 
 
 
-            public User GetUserByUsernameAndPassword(string username, string password)
+        public User GetUserByUsernameAndPassword(string username, string password)
         {
-            string sql = "SELECT * FROM [User] WHERE Username = @username AND Password = @password;";
-
-                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+            string sql = "SELECT * FROM [User] WHERE Username = @u AND Password = @p";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@Username", username);
-                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@u", username);
+                cmd.Parameters.AddWithValue("@p", password);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader r = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    if (r.Read())
                     {
-                        int userId = Convert.ToInt32(reader["UserID"]);
-                        string uname = reader["Username"].ToString();
-                        string pword = reader["Password"].ToString();
-                        bool isAdmin = Convert.ToBoolean(reader["IsAdmin"]);
-                        return new User(userId, uname, pword, isAdmin);
+                        int id = Convert.ToInt32(r["UserID"]);
+                        string uname = r["Username"].ToString();
+                        string pword = r["Password"].ToString();
+                        string role = r["Role"].ToString();
+                        return new User(id, uname, pword, role);
                     }
                 }
             }
@@ -952,21 +957,19 @@ namespace vinylApp.Repositories
 
 
 
+
         public int InsertUser(User user)
         {
-            int newId = GetNextUserId();
-            string sql = "INSERT INTO [User] (Username, Password, IsAdmin) VALUES (@Username, @Password, @IsAdmin)";
-
+            string sql = "INSERT INTO [User] (Username, Password, Role) VALUES (@u, @p, @r); SELECT SCOPE_IDENTITY();";
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-        
-                cmd.Parameters.AddWithValue("@Username", user.Username);
-                cmd.Parameters.AddWithValue("@Password", user.Password);
-                cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
-                cmd.ExecuteNonQuery();
-                return newId;
+                cmd.Parameters.AddWithValue("@u", user.Username);
+                cmd.Parameters.AddWithValue("@p", user.Password);
+                cmd.Parameters.AddWithValue("@r", user.Role);
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
+
 
         private int GetNextUserId()
         {

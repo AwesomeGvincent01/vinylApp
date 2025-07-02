@@ -8,17 +8,18 @@ namespace vinylApp.Model
 {
     public class User
     {
-        public int UserID { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool IsAdmin { get; set; }
+        public int UserID { get; }
+        public string Username { get; }
+        public string Password { get; }
+        public string Role { get; }
 
-        public User(int userId, string username, string password, bool isAdmin)
+        public User(int id, string uname, string pword, string role)
         {
-            UserID = userId;
-            Username = username;
-            Password = password;
-            IsAdmin = isAdmin;
+            UserID = id;
+            Username = uname;
+            Password = pword;
+            Role = role;
         }
     }
+
 }

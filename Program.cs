@@ -499,7 +499,8 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayOrders(storageManager1.GetAllOrders());
+                        view.DisplayOrders(storageManager1.GetOrders(currentUser));
+
                         break;
                     case "2":
                         Console.Write("Enter Customer ID: ");
@@ -587,17 +588,14 @@ namespace vinylApp
 
                 if (currentUser != null)
                 {
-                    if (currentUser.IsAdmin)
-                    {
+                    if (currentUser.Role == "Admin")
                         HandleAdminMainMenu();
-                    }
                     else
-                    {
                         HandleUserMainMenu();
-                    }
                 }
             }
         }
+  
 
 
         private static void Login()
@@ -612,7 +610,9 @@ namespace vinylApp
 
             if (currentUser != null)
             {
-                Console.WriteLine($"\nLogin successful! Welcome, {currentUser.Username} ({(currentUser.IsAdmin ? "Admin" : "User")})");
+                Console.WriteLine($"\nLogin successful! Welcome, {currentUser.Username} " +
+                  $"({(currentUser.Role == "Admin" ? "Admin" : "User")})");
+
             }
             else
             {
@@ -631,20 +631,21 @@ namespace vinylApp
             view.DisplayMessage("Enter a password: ");
             string password = view.GetInput();
 
-            bool isAdmin = false;
+            string role = "Customer";
 
-
-            if (currentUser != null && currentUser.IsAdmin)
+            if (currentUser != null && currentUser.Role == "Admin")
             {
-                view.DisplayMessage("Is this an admin account? (yes/no): ");
-                string isAdminInput = view.GetInput().ToLower();
-                isAdmin = (isAdminInput == "yes" || isAdminInput == "y");
+                view.DisplayMessage("Is this an admin account? (yes or no): ");
+                string ans = view.GetInput().Trim().ToLower();
+                if (ans == "yes" || ans == "y")
+                    role = "Admin";
             }
 
-            User newUser = new User(0, username, password, isAdmin);
+            User newUser = new User(0, username, password, role);
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registration complete. Your user ID is {newId}.");
         }
+
 
 
         private static void HandleAdminMainMenu()
@@ -787,18 +788,18 @@ namespace vinylApp
             Console.Write("Enter a new username: ");
             string username = view.GetInput();
 
-
             view.DisplayMessage("Enter a password:");
             string password = view.GetInput();
 
             view.DisplayMessage("Make this account admin? (y/n):");
-            string isAdminInput = view.GetInput().ToLower();
-            bool isAdmin = (isAdminInput == "yes" || isAdminInput == "y");
+            string ans = view.GetInput().Trim().ToLower();
+            string role = (ans == "y" || ans == "yes") ? "Admin" : "Customer";
 
-            User newUser = new User(0, username, password, isAdmin);
+            User newUser = new User(0, username, password, role);
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"User created successfully. ID: {newId}");
         }
+
 
 
 
