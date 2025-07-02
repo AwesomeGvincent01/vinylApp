@@ -14,6 +14,12 @@ namespace vinylApp.Model
         public int ArtistID { get; set; }
         public int GenreID { get; set; }
 
+        public string ArtistName { get; set; }
+        public string GenreName { get; set; }
+
+  
+        public Record() { }
+
         public Record(int recordId, string title, int releaseYear, int artistId, int genreId)
         {
             RecordID = recordId;
@@ -24,4 +30,3 @@ namespace vinylApp.Model
         }
     }
 }
-

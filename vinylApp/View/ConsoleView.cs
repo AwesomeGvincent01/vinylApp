@@ -41,11 +41,25 @@ namespace vinylApp.View
             return Console.ReadLine();
         }
 
+
+        public string DisplayGenreSubmenu()
+        {
+            Console.WriteLine("\n--- View Genres ---");
+            Console.WriteLine("1. iew All Genres");
+            Console.WriteLine("2. Search by Name");
+            Console.WriteLine("3. Sort alphabetically");
+            Console.WriteLine("4. Return to Genre Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+
+
         public string DisplayCustomerMenu()
         {
          
             Console.WriteLine("\n--- Customer Menu ---");
-            Console.WriteLine("1. View All Customers");
+            Console.WriteLine("1. View Customers");
             Console.WriteLine("2. Update Customer Name by ID");
             Console.WriteLine("3. Insert New Customer");
             Console.WriteLine("4. Delete Customer by Name");
@@ -53,6 +67,22 @@ namespace vinylApp.View
             Console.Write("Select an option: ");
             return Console.ReadLine();
         }
+
+        public string DisplayCustomerSubmenu()
+        {
+            Console.WriteLine("\n--- Customer Filter Menu ---");
+            Console.WriteLine("1. View All Customers");
+            Console.WriteLine("2. Search by Full Name");
+            Console.WriteLine("3. Search by Email");
+            Console.WriteLine("4. Search by Phone Number");
+            Console.WriteLine("5. Sort by First Name (ascending)");
+            Console.WriteLine("6. Sort by Last Name (ascending)");
+            Console.WriteLine("7. Return to Main Menu");
+            Console.Write("Select a option: ");
+            return Console.ReadLine();
+        }
+
+
 
         public string DisplayArtistMenu()
         {
@@ -141,14 +171,51 @@ namespace vinylApp.View
         public string DisplayOrderMenu()
         {
             Console.WriteLine("\n--- Order Menu ---");
-            Console.WriteLine("1. View All Orders");
-            Console.WriteLine("2. Update Order Status");
-            Console.WriteLine("3. Insert New Order");
-            Console.WriteLine("4. Delete Order by ID");
+            Console.WriteLine("1. View Orders");
+            Console.WriteLine("2. Insert New Orders");
+            Console.WriteLine("3. Update Order Status'");
+            Console.WriteLine("4. Delete Order");
             Console.WriteLine("5. Return to Main Menu");
-            Console.Write("Select a option: ");
+            Console.Write("Select an option: ");
             return Console.ReadLine();
         }
+
+
+
+
+        public void DisplayOrderDetails(List<OrderDetail> details)
+        {
+            Console.WriteLine("\n--- Order Details ---");
+            Console.WriteLine("RecordID | Quantity | Price");
+            Console.WriteLine("----------------------------");
+            foreach (var detail in details)
+            {
+                Console.WriteLine($"{detail.RecordID}      | {detail.Quantity}       | ${detail.Price:F2}");
+            }
+        }
+
+        public string DisplayOrder2Menu()
+        {
+            Console.WriteLine("\n--- Order Menu ---");
+            Console.WriteLine("1. View Orders");
+            Console.WriteLine("2. Return to  menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+        public string DisplayOrderSubmenu()
+        {
+            Console.WriteLine("\n--- View Orders ---");
+            Console.WriteLine("1. View All Order");
+            Console.WriteLine("2. Search by Customer ID");
+            Console.WriteLine("3. Filter by Order Status");
+            Console.WriteLine("4. Filter by Date Range");
+            Console.WriteLine("5. View Order Details by Order ID");
+            Console.WriteLine("6. Return to Order Menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
 
         public string DisplayRecordsSubSubMenu()
         {
@@ -161,6 +228,19 @@ namespace vinylApp.View
         }
 
 
+        public string DisplayUserSubMenu()
+        {
+            Console.WriteLine("\n--- Record Menu ---");
+            Console.WriteLine("1. View All Records");
+            Console.WriteLine("2. Search by Title");
+            Console.WriteLine("3. Search by Artist");
+            Console.WriteLine("4. Filter by Year/Decade");
+            Console.WriteLine("5. Sort by Title");
+            Console.WriteLine("6. Sort by Year");
+            Console.WriteLine("7. Back to User Menu");
+            Console.Write("Choose a option: ");
+            return Console.ReadLine();
+        }
 
 
 
@@ -177,13 +257,44 @@ namespace vinylApp.View
 
         public void DisplayCustomers(List<Customer> customers)
         {
-            Console.WriteLine("\nID   | First Name        | Last Name         | Email                      | Phone Number");
-            Console.WriteLine("-----|--------------------|-------------------|-----------------------------|----------------");
-            foreach (Customer customer in customers)
+            int pageSize = 20; // changed from 10
+            int totalPages = customers.Count / pageSize;
+            int currentPage = 1;
+
+            while (true)
             {
-                Console.WriteLine($"{customer.CustomerId,-5} | {customer.FirstName,-18} | {customer.LastName,-17} | {customer.Email,-27} | {customer.PhoneNumber}");
+                Console.Clear();
+                Console.WriteLine("ID   | First Name        | Last Name         | Email                      | Phone Number");
+                Console.WriteLine("-----|--------------------|-------------------|-----------------------------|----------------");
+
+                var pageData = customers.Skip(currentPage * pageSize).Take(pageSize);
+
+                foreach (var c in pageData)
+                {
+                    Console.WriteLine($"{c.CustomerId,-5} | {c.FirstName,-18} | {c.LastName,-18} | {c.Email,-28} | {c.PhoneNumber}");
+                }
+
+                Console.WriteLine($"\n{currentPage}/{totalPages}");
+
+                string input = Console.ReadLine();
+
+                if (input == "n" || input == "N")
+                {
+                    currentPage++;
+                }
+                else if (input == "p" || input == "P")
+                {
+                    currentPage--;
+                }
+                else if (input == "q")
+                {
+                    break;
+                }
             }
         }
+
+
+
 
 
 
@@ -208,34 +319,56 @@ namespace vinylApp.View
 
         public void DisplayRecords(List<Record> records)
         {
-            Console.WriteLine("\nID   | Title                   | Year | ArtistID | GenreID");
-            Console.WriteLine("-----|--------------------------|------|----------|--------");
-            foreach (Record record in records)
+            int pageSize = 20; // changed from 10
+            int totalPages = records.Count / pageSize;
+            int currentPage = 1;
+
+            while (true)
             {
-                Console.WriteLine($"{record.RecordID,-5} | {record.Title,-25} | {record.ReleaseYear,-4} | {record.ArtistID,-8} | {record.GenreID}");
+                Console.Clear();
+                Console.WriteLine("ID   | Title                   | Year | Artist      | Genre");
+                Console.WriteLine("-----|--------------------------|------|-------------|--------");
+
+                var pageData = records.Skip(currentPage * pageSize).Take(pageSize);
+
+                foreach (var r in pageData)
+                {
+                    Console.WriteLine($"{r.RecordID,-5} | {r.Title,-25} | {r.ReleaseYear,-4} | {r.ArtistName,-11} | {r.GenreName}");
+                }
+
+                Console.WriteLine($"\n{currentPage}/{totalPages}");
+
+                string input = Console.ReadLine();
+
+                if (input == "n" || input == "N")
+                {
+                    currentPage++;
+                }
+                else if (input == "p" || input == "P")
+                {
+                    currentPage--;
+                }
+                else if (input == "q")
+                {
+                    break;
+                }
             }
         }
 
 
-        public void DisplayRecords(List<string[]> records)
-{
-    Console.WriteLine("\nID   | Title                   | Year | Artist      | Genre");
-    Console.WriteLine("-----|--------------------------|------|-------------|--------");
-    foreach (string[] record in records)
-    {
-        Console.WriteLine($"{record[0],-5} | {record[1],-25} | {record[2],-4} | {record[3],-11} | {record[4]}");
-    }
-}
+
+
+
 
 
 
         public void DisplayOrders(List<Order> orders)
         {
-            Console.WriteLine("\nID   | CustomerID | Date       | Status");
-            Console.WriteLine("-----|------------|------------|--------");
-            foreach (Order order in orders)
+            Console.WriteLine("\nID | CustomerID | Date       | Status");
+            Console.WriteLine("----------------------------------------");
+            foreach (var order in orders)
             {
-                Console.WriteLine($"{order.OrderID,-5} | {order.CustomerID,-10} | {order.OrderDate,-10} | {order.Status}");
+                Console.WriteLine($"{order.OrderID} | {order.CustomerID} | {order.OrderDate:yyyy-MM-dd} | {order.Status}");
             }
         }
 

@@ -10,15 +10,17 @@ namespace vinylApp.Model
     {
         public int OrderID { get; set; }
         public int CustomerID { get; set; }
-        public string OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
+
         public string Status { get; set; }
 
-        public Order(int orderId, int customerId, string orderDate, string status)
+        public Order(int orderId, int customerId, DateTime orderDate, string status)
         {
             OrderID = orderId;
             CustomerID = customerId;
             OrderDate = orderDate;
             Status = status;
         }
+
     }
 }

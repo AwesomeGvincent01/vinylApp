@@ -2,7 +2,7 @@
 using vinylApp.Model;
 using vinylApp.Repositories;
 using vinylApp.View;
-using vinylApp.vinylApp.Model;
+using vinylApp.Model;
 
 namespace vinylApp
 {
@@ -34,12 +34,13 @@ namespace vinylApp
         {
             while (true)
             {
-               
+                Console.Clear();
+
                 string choice = view.DisplayGenreMenu();
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayGenres(storageManager1.GetAllGenres());
+                        HandleGenreSubmenu(); 
                         break;
                     case "2":
                         UpdateGenreName();
@@ -68,16 +69,57 @@ namespace vinylApp
             }
         }
 
+        private static void HandleGenreSubmenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                string choice = view.DisplayGenreSubmenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayGenres(storageManager1.GetAllGenres());
+                        break;
+                    case "2":
+                        Console.Write("Enter genre name: ");
+                        string keyword = Console.ReadLine();
+                        view.DisplayGenres(storageManager1.SearchGenresByName(keyword));
+                        break;
+                    case "3":
+                        view.DisplayGenres(storageManager1.SortGenresByName());
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to view all genres, you can see that it is assigned to the number '1', so, if you would\n like to view all genres, simply input '1' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+
+                Console.WriteLine("\nContinue? (enter)");
+                Console.ReadLine();
+            }
+        }
+
+
         private static void HandleCustomerMenu()
         {
             while (true)
             {
-              
+                Console.Clear();
+
                 string choice = view.DisplayCustomerMenu();
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayCustomers(storageManager1.GetAllCustomers());
+                        HandleCustomerSubmenu();
                         break;
                     case "2":
                         UpdateCustomer();
@@ -105,11 +147,67 @@ namespace vinylApp
             }
         }
 
+
+        private static void HandleCustomerSubmenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                string choice = view.DisplayCustomerSubmenu();
+
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayCustomers(storageManager1.GetAllCustomers());
+                        break;
+                    case "2":
+                        Console.Write("Enter first name: ");
+                        string firstName = Console.ReadLine();
+                        Console.Write("Enter last name: ");
+                        string lastName = Console.ReadLine();
+                        view.DisplayCustomers(storageManager1.SearchCustomersByFullName(firstName, lastName));
+                        break;
+                    case "3":
+                        Console.Write("Enter email: ");
+                        string email = Console.ReadLine();
+                        view.DisplayCustomers(storageManager1.SearchCustomersByEmail(email));
+                        break;
+                    case "4":
+                        Console.Write("Enter phone number: ");
+                        string phone = Console.ReadLine();
+                        view.DisplayCustomers(storageManager1.SearchCustomersByPhone(phone));
+                        break;
+                    case "5":
+                        view.DisplayCustomers(storageManager1.SortCustomersByFirstName());
+                        break;
+                    case "6":
+                        view.DisplayCustomers(storageManager1.SortCustomersByLastName());
+                        break;
+                    case "7":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to search for a customer by their email, you can see that it is assigned to the number '3', so, if you would\n like to search for a customer by their email, simply input '3' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+            }
+        }
+
+
+
         private static void HandleArtistMenu()
         {
             while (true)
             {
-               
+                Console.Clear();
+
                 string choice = view.DisplayArtistMenu();
                 switch (choice)
                 {
@@ -147,6 +245,7 @@ namespace vinylApp
         {
             while (true)
             {
+                Console.Clear();
                 string choice = view.DisplayArtistSubmenu();
                 switch (choice)
                 {
@@ -188,7 +287,8 @@ namespace vinylApp
             bool recordMenuActive = true;
             while (recordMenuActive)
             {
-              
+                Console.Clear();
+
                 string choice = view.DisplayRecordMenu();
                 switch (choice)
                 {
@@ -236,6 +336,7 @@ namespace vinylApp
         {
             while (true)
             {
+                Console.Clear();
                 string choice = view.DisplayRecordSubmenu();
                 switch (choice)
                 {
@@ -355,20 +456,22 @@ namespace vinylApp
         {
             while (true)
             {
-                string choice = view.DisplayOrderMenu();
+                Console.Clear();
+                string choice = view.DisplayOrderMenu(); 
+
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayOrders(storageManager1.GetAllOrders());
+                        HandleOrderSubmenu();
                         break;
                     case "2":
-                        UpdateOrderStatus();
+                        InsertNewOrder(); 
                         break;
                     case "3":
-                        InsertNewOrder();
+                        UpdateOrderStatus(); 
                         break;
                     case "4":
-                        DeleteOrderById();
+                        DeleteOrderById(); 
                         break;
                     case "5":
                         return;
@@ -380,12 +483,68 @@ namespace vinylApp
 
                         Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
                             "" +
-                            "For example, if you'd like to update order status, you can see that it is assigned to the number '2', so, if you would\n like to update order status, simply input '2' into the program, and so on!\n");
+                            "For example, if you'd like to view all orders, you can see that it is assigned to the number '1', so, if you would\n like to view all orders, simply input '1' into the program, and so on!\n");
                         Console.ResetColor();
                         break;
                 }
             }
         }
+
+
+        private static void HandleOrderSubmenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayOrderSubmenu();
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayOrders(storageManager1.GetAllOrders());
+                        break;
+                    case "2":
+                        Console.Write("Enter Customer ID: ");
+                        int customerId = view.GetIntInput();
+                        view.DisplayOrders(storageManager1.GetOrdersByCustomerId(customerId));
+                        break;
+                    case "3":
+                        Console.Write("Enter Order Status (example: Pending, Shipped): ");
+                        string status = Console.ReadLine();
+                        view.DisplayOrders(storageManager1.GetOrdersByStatus(status));
+                        break;
+                    case "4":
+                        Console.Write("Enter start date (using this format : 000-00-00): ");
+                        DateTime start = DateTime.Parse(Console.ReadLine());
+
+                        Console.Write("Enter end date (using this format again: 0000-00-00): ");
+                        DateTime end = DateTime.Parse(Console.ReadLine());
+
+                        view.DisplayOrders(storageManager1.GetOrdersByDateRange(start, end));
+                        break;
+                    case "5":
+                        Console.Write("Enter Order ID to view details: ");
+                        int orderId = view.GetIntInput();
+                        view.DisplayOrderDetails(storageManager1.GetOrderDetails(orderId));
+                        break;
+                    case "6":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nInvalid input! ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("please choose a valid option. If you're confused, the options are number based\n\n " +
+                            "" +
+                            "For example, if you'd like to view all genres, you can see that it is assigned to the number '1', so, if you would\n like to view all genres, simply input '1' into the program, and so on!\n");
+                        Console.ResetColor();
+                        break;
+                }
+
+                Console.WriteLine("\nContinue? (enter)");
+                Console.ReadLine();
+            }
+        }
+
 
 
 
@@ -550,7 +709,7 @@ namespace vinylApp
                 switch (choice)
                 {
                     case "1":
-                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        HandleUserRecordSubMenu();
                         break;
                     case "2":
                         view.DisplayGenres(storageManager1.GetAllGenres());
@@ -574,6 +733,51 @@ namespace vinylApp
                         Console.ResetColor();
                         break;
                 }
+            }
+        }
+
+
+
+        private static void HandleUserRecordSubMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                string choice = view.DisplayUserSubMenu();
+
+                switch (choice)
+                {
+                    case "1":
+                        view.DisplayRecords(storageManager1.GetAllRecords());
+                        break;
+                    case "2":
+                        Console.Write("Enter title keyword: ");
+                        string titleKeyword = Console.ReadLine();
+                        view.DisplayRecords(storageManager1.GetRecordsByTitle(titleKeyword));
+                        break;
+                    case "3":
+                        Console.Write("Enter artist name: ");
+                        string artistKeyword = Console.ReadLine();
+                        view.DisplayRecords(storageManager1.SearchRecordsByArtist(artistKeyword));
+                        break;
+                    case "4":
+                        FilterRecordsByYearRange();
+                        break;
+                    case "5":
+                        view.DisplayRecords(storageManager1.SortRecordsByTitle());
+                        break;
+                    case "6":
+                        view.DisplayRecords(storageManager1.SortRecordsByYear());
+                        break;
+                    case "7":
+                        return;
+                    default:
+                        view.DisplayError11("Invalid input. Please choose a number from the list.");
+                        break;
+                }
+
+                Console.WriteLine("\nPress enter to continue...");
+                Console.ReadLine();
             }
         }
 
@@ -806,7 +1010,8 @@ namespace vinylApp
             int customerId = view.GetIntInput();
 
             view.DisplayMessage("Enter order date (format: 0000-00-00): ");
-            string date = view.GetInput();
+            string input = view.GetInput();
+            DateTime date = DateTime.Parse(input);
 
             view.DisplayMessage("Enter order status (Processing, Cancelled, Shipped, Delivered): ");
             string status = view.GetInput();
@@ -815,6 +1020,7 @@ namespace vinylApp
             int generatedId = storageManager1.InsertOrder(order1);
 
             view.DisplayMessage($"New order inserted with ID: {generatedId}");
+
         }
 
 

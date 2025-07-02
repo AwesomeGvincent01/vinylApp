@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vinylApp.vinylApp.Model
+namespace vinylApp.Model
 {
     public class User
     {

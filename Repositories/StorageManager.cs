@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 using vinylApp.Model;
 using vinylApp;
 using System.Data;
-using vinylApp.vinylApp.Model;
+using vinylApp.Model;
 
 namespace vinylApp.Repositories
 {
@@ -61,6 +61,52 @@ namespace vinylApp.Repositories
 
 
         }
+
+        public List<Genre> SearchGenresByName(string nameKeyword)
+        {
+            List<Genre> genres = new List<Genre>();
+            string query = "SELECT * FROM Genre WHERE Name LIKE @test";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@test", "%" + nameKeyword + "%");
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        genres.Add(new Genre(
+                            Convert.ToInt32(reader["GenreID"]),
+                            reader["Name"].ToString()
+                        ));
+                    }
+                }
+            }
+
+            return genres;
+        }
+
+        public List<Genre> SortGenresByName()
+        {
+            List<Genre> genres = new List<Genre>();
+            string query = "SELECT * FROM Genre ORDER BY Name ASC";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    genres.Add(new Genre(
+                        Convert.ToInt32(reader["GenreID"]),
+                        reader["Name"].ToString()
+                    ));
+                }
+            }
+
+            return genres;
+        }
+
+
+
 
         public int UpdateGenreName(int genreId, string genreName)
         {
@@ -117,12 +163,12 @@ namespace vinylApp.Repositories
         {
             List<Customer> customers = new List<Customer>();
             string query = "SELECT * FROM Customer";
-            using (SqlCommand command = new SqlCommand(query, conn))
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    int id = (int)reader["CustomerID"];
+                    int id = Convert.ToInt32(reader["CustomerID"]);
                     string firstName = reader["FirstName"].ToString();
                     string lastName = reader["LastName"].ToString();
                     string email = reader["Email"].ToString();
@@ -132,6 +178,99 @@ namespace vinylApp.Repositories
                 }
             }
             return customers;
+        }
+
+        public List<Customer> SearchCustomersByFullName(string firstName, string lastName)
+        {
+            List<Customer> results = new List<Customer>();
+            string query = "SELECT * FROM Customer WHERE FirstName LIKE @FirstName AND LastName LIKE @LastName";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@FirstName", "%" + firstName + "%");
+                cmd.Parameters.AddWithValue("@LastName", "%" + lastName + "%");
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(CreateCustomerFromReader(reader));
+                    }
+                }
+            }
+            return results;
+        }
+
+        public List<Customer> SearchCustomersByEmail(string email)
+        {
+            List<Customer> results = new List<Customer>();
+            string query = "SELECT * FROM Customer WHERE Email LIKE @Email";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", "%" + email + "%");
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(CreateCustomerFromReader(reader));
+                    }
+                }
+            }
+            return results;
+        }
+
+        public List<Customer> SearchCustomersByPhone(string phone)
+        {
+            List<Customer> results = new List<Customer>();
+            string query = "SELECT * FROM Customer WHERE PhoneNumber LIKE @Phone";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Phone", "%" + phone + "%");
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(CreateCustomerFromReader(reader));
+                    }
+                }
+            }
+            return results;
+        }
+
+        public List<Customer> SortCustomersByFirstName()
+        {
+            return RunCustomerSortQuery("SELECT * FROM Customer ORDER BY FirstName ASC");
+        }
+
+        public List<Customer> SortCustomersByLastName()
+        {
+            return RunCustomerSortQuery("SELECT * FROM Customer ORDER BY LastName ASC");
+        }
+
+        private List<Customer> RunCustomerSortQuery(string query)
+        {
+            List<Customer> customers = new List<Customer>();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    customers.Add(CreateCustomerFromReader(reader));
+                }
+            }
+            return customers;
+        }
+
+        private Customer CreateCustomerFromReader(SqlDataReader reader)
+        {
+            return new Customer(
+                Convert.ToInt32(reader["CustomerID"]),
+                reader["FirstName"].ToString(),
+                reader["LastName"].ToString(),
+                reader["Email"].ToString(),
+                reader["PhoneNumber"].ToString()
+            );
         }
 
 
@@ -288,11 +427,11 @@ namespace vinylApp.Repositories
         public List<Artist> SearchArtistsByName(string nameKeyword)
         {
             List<Artist> artists = new List<Artist>();
-            string query = "SELECT * FROM Artist WHERE ArtistName LIKE @kw";
+            string query = "SELECT * FROM Artist WHERE ArtistName LIKE @test";
 
             using (SqlCommand command = new SqlCommand(query, conn))
             {
-                command.Parameters.AddWithValue("@kw", "%" + nameKeyword + "%");
+                command.Parameters.AddWithValue("@test", "%" + nameKeyword + "%");
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -407,18 +546,19 @@ namespace vinylApp.Repositories
             return records;
         }
 
-        public List<string[]> GetAllRecords()
+        public List<Record> GetAllRecords()
         {
-            List<string[]> records = new List<string[]>();
+            List<Record> records = new List<Record>();
 
             string query = @"
-        SELECT Record.RecordID, Record.Title, Record.ReleaseYear, 
-               Artist.ArtistName AS ArtistName, 
-               Genre.Name AS GenreName
-        FROM Record 
-        JOIN Artist ON Record.ArtistID = Artist.ArtistID 
-        JOIN Genre ON Record.GenreID = Genre.GenreID
-        ORDER BY Record.RecordID;";
+    SELECT Record.RecordID, Record.Title, Record.ReleaseYear,
+           Record.ArtistID, Record.GenreID,
+           Artist.ArtistName AS ArtistName,
+           Genre.Name AS GenreName
+    FROM Record
+    JOIN Artist ON Record.ArtistID = Artist.ArtistID
+    JOIN Genre ON Record.GenreID = Genre.GenreID
+    ORDER BY Record.RecordID;";
 
             using (SqlCommand command = new SqlCommand(query, conn))
             {
@@ -426,15 +566,18 @@ namespace vinylApp.Repositories
                 {
                     while (reader.Read())
                     {
-                        string[] row = new string[]
+                        Record record = new Record()
                         {
-                    reader["RecordID"].ToString(),
-                    reader["Title"].ToString(),
-                    reader["ReleaseYear"].ToString(),
-                    reader["ArtistName"].ToString(),
-                    reader["GenreName"].ToString()
+                            RecordID = Convert.ToInt32(reader["RecordID"]),
+                            Title = reader["Title"].ToString(),
+                            ReleaseYear = Convert.ToInt32(reader["ReleaseYear"]),
+                            ArtistID = Convert.ToInt32(reader["ArtistID"]),
+                            GenreID = Convert.ToInt32(reader["GenreID"]),
+                            ArtistName = reader["ArtistName"].ToString(),
+                            GenreName = reader["GenreName"].ToString()
                         };
-                        records.Add(row);
+
+                        records.Add(record);
                     }
                 }
             }
@@ -444,66 +587,39 @@ namespace vinylApp.Repositories
 
 
 
-        public List<string[]> SearchRecordsByArtist(string keyword)
+
+        public List<Record> SearchRecordsByArtist(string keyword)
         {
-            var records = new List<string[]>();
+            var records = new List<Record>();
+
             string sql = @"
-      SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName AS ArtistName, Genre.Name      AS GenreName
-FROM Record
-      JOIN Artist ON Record.ArtistID = Artist.ArtistID
-      JOIN Genre ON Record.GenreID  = Genre.GenreID
-      WHERE Artist.ArtistName LIKE @input
-      ORDER BY Record.Title;";
+        SELECT Record.RecordID, Record.Title, Record.ReleaseYear,
+               Record.ArtistID, Record.GenreID,
+               Artist.ArtistName AS ArtistName,
+               Genre.Name AS GenreName
+        FROM Record
+        JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        JOIN Genre ON Record.GenreID = Genre.GenreID
+        WHERE Artist.ArtistName LIKE @input
+        ORDER BY Record.Title;";
 
             using var cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@input", "%" + keyword + "%");
             using var reader = cmd.ExecuteReader();
+
             while (reader.Read())
             {
-                records.Add(new[] {
-          reader["RecordID"].ToString(),
-          reader["Title"].ToString(),
-          reader["ReleaseYear"].ToString(),
-          reader["ArtistName"].ToString(),
-          reader["GenreName"].ToString()
-        });
-            }
-
-            return records; 
-        }
-
-
-        public List<string[]> GetRecordsByYearRange(int startYear, int endYear)
-        {
-            List<string[]> records = new List<string[]>();
-
-            string query = @"
-        SELECT Record.RecordID, Record.Title, Record.ReleaseYear, Artist.ArtistName, Genre.Name
-        FROM Record JOIN Artist ON Record.ArtistID = Artist.ArtistID
-        JOIN Genre ON Record.GenreID = Genre.GenreID
-        WHERE Record.ReleaseYear BETWEEN @startYear AND @endYear
-        ORDER BY Record.ReleaseYear;";
-
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@startYear", startYear);
-                cmd.Parameters.AddWithValue("@endYear", endYear);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                var record = new Record()
                 {
-                    while (reader.Read())
-                    {
-                        string[] row = new string[]
-                        {
-                    reader["RecordID"].ToString(),
-                    reader["Title"].ToString(),
-                    reader["ReleaseYear"].ToString(),
-                    reader["ArtistName"].ToString(),
-                    reader["Name"].ToString()
-                        };
-                        records.Add(row);
-                    }
-                }
+                    RecordID = Convert.ToInt32(reader["RecordID"]),
+                    Title = reader["Title"].ToString(),
+                    ReleaseYear = Convert.ToInt32(reader["ReleaseYear"]),
+                    ArtistID = Convert.ToInt32(reader["ArtistID"]),
+                    GenreID = Convert.ToInt32(reader["GenreID"]),
+                    ArtistName = reader["ArtistName"].ToString(),
+                    GenreName = reader["GenreName"].ToString()
+                };
+                records.Add(record);
             }
 
             return records;
@@ -532,7 +648,7 @@ FROM Record
         }
 
 
-        public int InsertRecord(Record recordTemp)
+        public int InsertRecord(Record record)
         {
             int newId = GetNextRecordId();
 
@@ -540,10 +656,10 @@ FROM Record
                 "INSERT INTO Record (RecordID, Title, ReleaseYear, ArtistID, GenreID) VALUES (@Id, @Title, @Year, @ArtistId, @GenreId);", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", newId);
-                cmd.Parameters.AddWithValue("@Title", recordTemp.Title);
-                cmd.Parameters.AddWithValue("@Year", recordTemp.ReleaseYear);
-                cmd.Parameters.AddWithValue("@ArtistId", recordTemp.ArtistID);
-                cmd.Parameters.AddWithValue("@GenreId", recordTemp.GenreID);
+                cmd.Parameters.AddWithValue("@Title", record.Title);
+                cmd.Parameters.AddWithValue("@Year", record.ReleaseYear);
+                cmd.Parameters.AddWithValue("@ArtistId", record.ArtistID);
+                cmd.Parameters.AddWithValue("@GenreId", record.GenreID);
                 cmd.ExecuteNonQuery();
                 return newId;
             }
@@ -570,11 +686,11 @@ FROM Record
             while (reader.Read())
             {
                 records.Add(new Record(
-                    (int)reader["RecordID"],
+                    Convert.ToInt32(reader["RecordID"]),
                     reader["Title"].ToString(),
-                    (int)reader["ReleaseYear"],
-                    (int)reader["ArtistID"],
-                    (int)reader["GenreID"]
+                    Convert.ToInt32(reader["ReleaseYear"]),
+                    Convert.ToInt32(reader["ArtistID"]), 
+                    Convert.ToInt32(reader["GenreID"])
                 ));
             }
             return records;
@@ -589,15 +705,60 @@ FROM Record
             while (reader.Read())
             {
                 records.Add(new Record(
-                    (int)reader["RecordID"],
+                    Convert.ToInt32(reader["RecordID"]),
                     reader["Title"].ToString(),
-                    (int)reader["ReleaseYear"],
-                    (int)reader["ArtistID"],
-                    (int)reader["GenreID"]
+                    Convert.ToInt32(reader["ReleaseYear"]),
+                    Convert.ToInt32(reader["ArtistID"]),
+                    Convert.ToInt32(reader["GenreID"])
                 ));
             }
             return records;
         }
+
+
+        public List<Record> GetRecordsByYearRange(int startYear, int endYear)
+        {
+            List<Record> records = new List<Record>();
+
+            string query = @"
+        SELECT Record.RecordID, Record.Title, Record.ReleaseYear,
+               Record.ArtistID, Record.GenreID,
+               Artist.ArtistName AS ArtistName,
+               Genre.Name AS GenreName
+        FROM Record
+        JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        JOIN Genre ON Record.GenreID = Genre.GenreID
+        WHERE Record.ReleaseYear BETWEEN @startYear AND @endYear
+        ORDER BY Record.ReleaseYear;";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@startYear", startYear);
+                cmd.Parameters.AddWithValue("@endYear", endYear);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Record record = new Record()
+                        {
+                            RecordID = Convert.ToInt32(reader["RecordID"]),
+                            Title = reader["Title"].ToString(),
+                            ReleaseYear = Convert.ToInt32(reader["ReleaseYear"]),
+                            ArtistID = Convert.ToInt32(reader["ArtistID"]),
+                            GenreID = Convert.ToInt32(reader["GenreID"]),
+                            ArtistName = reader["ArtistName"].ToString(),
+                            GenreName = reader["GenreName"].ToString()
+                        };
+
+                        records.Add(record);
+                    }
+                }
+            }
+
+            return records;
+        }
+
 
 
 
@@ -612,17 +773,104 @@ FROM Record
                 {
                     while (reader.Read())
                     {
-                        int orderId = Convert.ToInt32(reader["OrderID"]);
-                        int customerId = Convert.ToInt32(reader["CustomerID"]);
-                        string orderDate = reader["OrderDate"].ToString();
-                        string status = reader["Status"].ToString();
-
-                        orders.Add(new Order(orderId, customerId, orderDate, status));
+                        orders.Add(readordertest(reader));
                     }
+
                 }
             }
 
             return orders;
+        }
+
+
+     
+
+        public List<Order> GetOrdersByCustomerId(int customerId)
+        {
+            List<Order> orders = new List<Order>();
+            string query = "SELECT * FROM [Order] WHERE CustomerID = @CustomerID";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@CustomerID", customerId);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int orderId = Convert.ToInt32(reader["OrderID"]);
+                        DateTime date = (DateTime)reader["OrderDate"];
+                        string status = reader["Status"].ToString();
+
+                        orders.Add(new Order(orderId, customerId, date, status));
+                    }
+                }
+            }
+            return orders;
+        }
+
+        public List<Order> GetOrdersByStatus(string status)
+        {
+            List<Order> orders = new List<Order>();
+            string query = "SELECT * FROM [Order] WHERE Status = @Status";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Status", status);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int orderId = Convert.ToInt32(reader["OrderID"]);
+                        int customerId = Convert.ToInt32(reader["CustomerID"]);
+                        DateTime date = (DateTime)reader["OrderDate"];
+                        orders.Add(new Order(orderId, customerId, date, status));
+                    }
+                }
+            }
+            return orders;
+        }
+
+        public List<Order> GetOrdersByDateRange(DateTime start, DateTime end)
+        {
+            List<Order> orders = new List<Order>();
+            string query = "SELECT * FROM [Order] WHERE OrderDate BETWEEN @Start AND @End";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Start", start);
+                cmd.Parameters.AddWithValue("@End", end);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int orderId = Convert.ToInt32(reader["OrderID"]);
+                        int customerId = Convert.ToInt32(reader["CustomerID"]);
+                        DateTime date = (DateTime)reader["OrderDate"];
+                        string status = reader["Status"].ToString();
+                        orders.Add(new Order(orderId, customerId, date, status));
+                    }
+                }
+            }
+            return orders;
+        }
+
+        public List<OrderDetail> GetOrderDetails(int orderId)
+        {
+            List<OrderDetail> details = new List<OrderDetail>();
+            string query = "SELECT * FROM OrderDetail WHERE OrderID = @OrderID";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@OrderID", orderId);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int orderDetailId = Convert.ToInt32(reader["OrderDetailID"]);
+                        int recordId = Convert.ToInt32(reader["RecordID"]);
+                        int quantity = Convert.ToInt32(reader["Quantity"]);
+                        decimal price = (decimal)reader["Price"];
+                        details.Add(new OrderDetail(orderDetailId, orderId, recordId, quantity, price));
+                    }
+                }
+            }
+            return details;
         }
 
 
@@ -681,8 +929,7 @@ FROM Record
         {
             string sql = "SELECT * FROM [User] WHERE Username = @username AND Password = @password;";
 
-            ;
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Username", username);
                 cmd.Parameters.AddWithValue("@Password", password);
@@ -701,6 +948,9 @@ FROM Record
             }
             return null;
         }
+
+
+
 
         public int InsertUser(User user)
         {
@@ -727,6 +977,43 @@ FROM Record
         }
 
 
+
+        /* TO BE ADDED
+
+public int InsertUser(string username, string pass, bool admin)
+{
+    string sql = "INSERT INTO [User] (Username,Password,IsAdmin) VALUES ('"
+                 + username + "','" + pass + "'," + (admin ? 1 : 0) + ")";
+    using (SqlCommand cmd = new SqlCommand(sql, conn))
+    {
+        return cmd.ExecuteNonQuery();
+    }
+}
+
+public bool CheckLogin(string user, string pass])
+{
+    string q = "SELECT COUNT(*) FROM [User] WHERE Username='"
+               + user + "' AND Password='" + pass + "'";
+    using (SqlCommand c = new SqlCommand(q, conn))
+    {
+        int hits = (int)c.ExecuteScalar();
+        return hits == 1;
+    }
+}
+
+*/
+
+
+
+        private Order readordertest(SqlDataReader reader)
+        {
+            return new Order(
+                Convert.ToInt32(reader["OrderID"]),
+                Convert.ToInt32(reader["CustomerID"]),
+                (DateTime)reader["OrderDate"],
+                reader["Status"].ToString()
+            );
+        }
 
 
         public void CloseConnection()
