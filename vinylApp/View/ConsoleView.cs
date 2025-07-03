@@ -364,11 +364,40 @@ namespace vinylApp.View
 
         public void DisplayOrders(List<Order> orders)
         {
-            Console.WriteLine("\nID | CustomerID | Date       | Status");
-            Console.WriteLine("----------------------------------------");
-            foreach (var order in orders)
+            int pageSize = 20; // changed from 10
+            int totalPages = orders.Count / pageSize;
+            int currentPage = 1;
+
+            while (true)
             {
-                Console.WriteLine($"{order.OrderID} | {order.CustomerID} | {order.OrderDate:yyyy-MM-dd} | {order.Status}");
+                Console.Clear();
+                Console.WriteLine("ID   | CustomerID | Order Date        | Status");
+                Console.WriteLine("-----|------------|-------------------|--------------");
+
+                var pageData = orders.Skip(currentPage * pageSize).Take(pageSize);
+
+                foreach (var o in pageData)
+                {
+                    Console.WriteLine($"{o.OrderID,-5} | {o.CustomerID,-10} | {o.OrderDate.ToShortDateString(),-17} | {o.Status}");
+                }
+
+                Console.WriteLine("N - Next       P = Previous        Q - Quit");
+                Console.WriteLine($"\n{currentPage}/{totalPages}");
+
+                string input = Console.ReadLine();
+
+                if (input == "n" || input == "N")
+                {
+                    currentPage++;
+                }
+                else if (input == "p" || input == "P")
+                {
+                    currentPage--;
+                }
+                else if (input == "q")
+                {
+                    break;
+                }
             }
         }
 
