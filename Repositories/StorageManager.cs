@@ -955,6 +955,16 @@ namespace vinylApp.Repositories
         }
 
 
+        public bool UsernameExists(string username)
+        {
+            string sql = "SELECT COUNT(*) FROM [User] WHERE Username = @u";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@u", username);
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
 
 
 

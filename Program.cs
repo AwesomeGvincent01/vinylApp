@@ -636,13 +636,19 @@ namespace vinylApp
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                view.DisplayMessage("Your username and password can't be empty, please try again.");
+                view.DisplayMessage("Your username and password can't be empty, please try again.\n");
                 return;
             }
 
-            if (username.Length >= 100) 
+            if (username.Length >= 100)
             {
-                view.DisplayMessage("Boundary error: you may only have a username with up to *100* characters. Please try again");
+                view.DisplayMessage("Boundary error: you may only have a username with up to *100* characters. Please try again.\n");
+                return;
+            }
+
+            if (password.Length >= 100)
+            {
+                view.DisplayMessage("Boundary error: you may only have a password with up to *100* characters. Please try again.\n");
                 return;
             }
 
@@ -657,9 +663,17 @@ namespace vinylApp
             }
 
             User newUser = new User(0, username, password, role);
+
+            if (storageManager1.UsernameExists(username))
+            {
+                view.DisplayMessage("Username is already taken, please try again.");
+                return;
+            }
+
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registration complete. Your user ID is {newId}.");
         }
+
 
 
 
