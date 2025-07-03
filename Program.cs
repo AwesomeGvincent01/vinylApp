@@ -629,10 +629,14 @@ namespace vinylApp
         private static void Register()
         {
             view.DisplayMessage("Enter a new username: ");
-            string username = view.GetInput();
+            string username = view.GetInput().Trim();
+
 
             view.DisplayMessage("Enter a password: ");
-            string password = view.GetInput();
+            string password = view.GetInput().Trim();
+
+
+
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
@@ -666,7 +670,7 @@ namespace vinylApp
 
             if (storageManager1.UsernameExists(username))
             {
-                view.DisplayMessage("Username is already taken, please try again.");
+                view.DisplayMessage("Username is already taken, please try again.\n");
                 return;
             }
 
