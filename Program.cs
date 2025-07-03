@@ -834,6 +834,9 @@ namespace vinylApp
             User newUser = new User(0, username, password, role);
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"User created successfully. ID: {newId}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -847,6 +850,9 @@ namespace vinylApp
             string genreName = view.GetInput();
             int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
         private static void InsertNewGenre()
@@ -857,6 +863,9 @@ namespace vinylApp
             Genre genre1 = new Genre(0, genreName);
             int generatedId = storageManager1.InsertGenre(genre1);
             view.DisplayMessage($"New genre inserted with ID: {generatedId}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
         private static void DeleteGenreByName()
@@ -865,6 +874,9 @@ namespace vinylApp
             string genreName = view.GetInput();
             int rowsAffected = storageManager1.DeleteGenreByName(genreName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -887,6 +899,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.UpdateCustomer(customerId, firstName, lastName, email, phoneNumber);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -911,6 +926,9 @@ namespace vinylApp
             int generatedId = storageManager1.InsertCustomer(customer1);
 
             view.DisplayMessage($"New customer inserted with ID: {generatedId}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -926,6 +944,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.DeleteCustomerByName(firstName, lastName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -940,6 +961,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.UpdateArtistName(artistId, newName);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -956,6 +980,9 @@ namespace vinylApp
             int generatedId = storageManager1.InsertArtist(artist1);
 
             view.DisplayMessage($"New artist inserted with ID: {generatedId}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -968,6 +995,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.DeleteArtistByName(name);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -982,6 +1012,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.UpdateRecordTitle(recordId, newTitle);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -1005,6 +1038,9 @@ namespace vinylApp
             int generatedId = storageManager1.InsertRecord(record1);
 
             view.DisplayMessage($"New record inserted with ID: {generatedId}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -1017,6 +1053,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.DeleteRecordByTitle(title);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -1035,6 +1074,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.UpdateOrderStatus(orderId, newStatus);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
@@ -1058,6 +1100,9 @@ namespace vinylApp
 
             view.DisplayMessage($"New order inserted with ID: {generatedId}");
 
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
+
         }
 
 
@@ -1070,6 +1115,9 @@ namespace vinylApp
 
             int rowsAffected = storageManager1.DeleteOrderById(orderId);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
         }
 
 
