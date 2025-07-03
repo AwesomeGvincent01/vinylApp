@@ -592,7 +592,10 @@ namespace vinylApp
                         HandleAdminMainMenu();
                     else
                         HandleUserMainMenu();
+
                 }
+               
+
             }
         }
   
@@ -631,6 +634,12 @@ namespace vinylApp
             view.DisplayMessage("Enter a password: ");
             string password = view.GetInput();
 
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                view.DisplayMessage("Your username and password can't be empty, please try again.");
+                return;
+            }
+
             string role = "Customer";
 
             if (currentUser != null && currentUser.Role == "Admin")
@@ -645,6 +654,8 @@ namespace vinylApp
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registration complete. Your user ID is {newId}.");
         }
+
+
 
 
 

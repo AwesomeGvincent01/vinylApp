@@ -11,7 +11,7 @@ namespace vinylApp.View
     {
         public string DisplayMainMenu()
         {
-            Console.Clear();
+        
             Console.WriteLine("\nWelcome to the vinyl record database system");
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("Main Menu:");
@@ -257,7 +257,7 @@ namespace vinylApp.View
 
         public void DisplayCustomers(List<Customer> customers)
         {
-            int pageSize = 20; // changed from 10
+            int pageSize = 20;
             int totalPages = customers.Count / pageSize;
             int currentPage = 1;
 
@@ -319,7 +319,7 @@ namespace vinylApp.View
 
         public void DisplayRecords(List<Record> records)
         {
-            int pageSize = 20; // changed from 10
+            int pageSize = 20; 
             int totalPages = records.Count / pageSize;
             int currentPage = 1;
 
@@ -364,7 +364,7 @@ namespace vinylApp.View
 
         public void DisplayOrders(List<Order> orders)
         {
-            int pageSize = 20; // changed from 10
+            int pageSize = 20; 
             int totalPages = orders.Count / pageSize;
             int currentPage = 1;
 
