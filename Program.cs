@@ -922,6 +922,47 @@ namespace vinylApp
             view.DisplayMessage("Enter phone number of new customer: ");
             string phoneNumber = view.GetInput();
 
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                view.DisplayMessage("First name is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                view.DisplayMessage("Last name is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                view.DisplayMessage("Email is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                view.DisplayMessage("Phone number is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+          
+            if (storageManager1.CustomerExists(email, phoneNumber))
+            {
+                view.DisplayMessage("A customer with this email/phone number already exists. Please try again\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             Customer customer1 = new Customer(0, firstName, lastName, email, phoneNumber);
             int generatedId = storageManager1.InsertCustomer(customer1);
 
@@ -930,6 +971,9 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
+
+
 
 
 

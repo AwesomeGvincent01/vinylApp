@@ -318,6 +318,22 @@ namespace vinylApp.Repositories
 
 
 
+        public bool CustomerExists(string email, string phoneNumber)
+        {
+            string sql = "SELECT COUNT(*) FROM Customer WHERE Email = @Email OR PhoneNumber = @PhoneNumber";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
+
 
 
         public int DeleteCustomerByName(string firstName, string lastName)
