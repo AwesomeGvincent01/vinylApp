@@ -640,6 +640,12 @@ namespace vinylApp
                 return;
             }
 
+            if (username.Length >= 100) 
+            {
+                view.DisplayMessage("Boundary error: you may only have a username with up to *100* characters. Please try again");
+                return;
+            }
+
             string role = "Customer";
 
             if (currentUser != null && currentUser.Role == "Admin")
@@ -654,6 +660,7 @@ namespace vinylApp
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registration complete. Your user ID is {newId}.");
         }
+
 
 
 
