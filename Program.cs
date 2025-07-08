@@ -1017,8 +1017,24 @@ namespace vinylApp
             view.DisplayMessage("Enter artist name: ");
             string name = view.GetInput();
 
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                view.DisplayMessage("Artist name can't be empty\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             view.DisplayMessage("Enter artist country: ");
             string country = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(country))
+            {
+                view.DisplayMessage("Artist country can't be empty\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             Artist artist1 = new Artist(0, name, country);
             int generatedId = storageManager1.InsertArtist(artist1);
@@ -1028,6 +1044,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
