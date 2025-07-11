@@ -1015,18 +1015,18 @@ namespace vinylApp
         private static void InsertNewArtist()
         {
             view.DisplayMessage("Enter artist name: ");
-            string name = view.GetInput();
+            string artistName = view.GetInput().Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(name))
+            view.DisplayMessage("Enter artist country: ");
+            string country = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(artistName))
             {
                 view.DisplayMessage("Artist name can't be empty\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
-
-            view.DisplayMessage("Enter artist country: ");
-            string country = view.GetInput();
 
             if (string.IsNullOrWhiteSpace(country))
             {
@@ -1036,14 +1036,23 @@ namespace vinylApp
                 return;
             }
 
-            Artist artist1 = new Artist(0, name, country);
-            int generatedId = storageManager1.InsertArtist(artist1);
+          
+            if (storageManager1.ArtistNameExists(artistName))
+            {
+                view.DisplayMessage("That artist name already exists! please try again.");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
+            Artist artist1 = new Artist(0, artistName, country);
+            int generatedId = storageManager1.InsertArtist(artist1);
             view.DisplayMessage($"New artist inserted with ID: {generatedId}");
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 

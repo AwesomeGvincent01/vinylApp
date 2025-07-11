@@ -440,6 +440,23 @@ namespace vinylApp.Repositories
             return artists;
         }
 
+
+
+        public bool ArtistNameExists(string name)
+        {
+            string sql = "SELECT COUNT(*) FROM Artist WHERE ArtistName = @artistName";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@artistName", name.Trim().ToLower());
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+
+        }
+
+
+
+
         public List<Artist> SearchArtistsByName(string nameKeyword)
         {
             List<Artist> artists = new List<Artist>();
