@@ -62,6 +62,19 @@ namespace vinylApp.Repositories
 
         }
 
+
+        public bool GenreNameExists(string name)
+        {
+            string sql = "SELECT COUNT(*) FROM Genre WHERE Name = @name";
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@name", name.Trim());
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
         public List<Genre> SearchGenresByName(string nameKeyword)
         {
             List<Genre> genres = new List<Genre>();
@@ -137,12 +150,28 @@ namespace vinylApp.Repositories
 
         public int DeleteGenreByName(string genreName)
         {
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Genre WHERE Name = @GenreName", conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@GenreName", genreName);
-                return cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Genre WHERE Name = @GenreName", conn))
+                {
+                    cmd.Parameters.AddWithValue("@GenreName", genreName);
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("REFERENCE constraint"))
+                {
+                    Console.WriteLine("This genre cannot be deleted as its still linked to one or more records.");
+                }
+                else
+                {
+                    Console.WriteLine("Unexpected error occurred: " + ex.Message);
+                }
+                return 0;
             }
         }
+
 
         private int GetNextGenreId()
         {
@@ -546,12 +575,28 @@ namespace vinylApp.Repositories
 
         public int DeleteArtistByName(string artistName)
         {
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Artist WHERE ArtistName = @Name", conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@Name", artistName);
-                return cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Artist WHERE ArtistName = @Name", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Name", artistName);
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("REFERENCE constraint"))
+                {
+                    Console.WriteLine("This artist can't be deleted as theres still records linked to them.");
+                }
+                else
+                {
+                    Console.WriteLine("An unexpected error occurred: " + ex.Message);
+                }
+                return 0;
             }
         }
+
 
 
 
@@ -662,15 +707,7 @@ namespace vinylApp.Repositories
 
 
 
-        public int UpdateRecordTitle(int recordId, string newTitle)
-        {
-            using (SqlCommand cmd = new SqlCommand("UPDATE Record SET Title = @Title WHERE RecordID = @Id", conn))
-            {
-                cmd.Parameters.AddWithValue("@Title", newTitle);
-                cmd.Parameters.AddWithValue("@Id", recordId);
-                return cmd.ExecuteNonQuery();
-            }
-        }
+       
 
         private int GetNextRecordId()
         {
@@ -681,10 +718,36 @@ namespace vinylApp.Repositories
         }
 
 
+        public bool ArtistExists(int artistId)
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Artist WHERE ArtistID = @id", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", artistId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        public bool GenreExists(int genreId)
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Genre WHERE GenreID = @id", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", genreId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        public bool RecordExists(int recordId)
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Record WHERE RecordID = @id", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", recordId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
         public int InsertRecord(Record record)
         {
             int newId = GetNextRecordId();
-
             using (SqlCommand cmd = new SqlCommand(
                 "INSERT INTO Record (RecordID, Title, ReleaseYear, ArtistID, GenreID) VALUES (@Id, @Title, @Year, @ArtistId, @GenreId);", conn))
             {
@@ -697,18 +760,35 @@ namespace vinylApp.Repositories
                 return newId;
             }
         }
-        
-
-
 
         public int DeleteRecordByTitle(string title)
         {
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM Record WHERE Title = @Title", conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@Title", title);
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Record WHERE Title = @Title", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Title", title);
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) 
+                    return -1;
+                throw;
+            }
+        }
+
+        public int UpdateRecordTitle(int recordId, string newTitle)
+        {
+            using (SqlCommand cmd = new SqlCommand("UPDATE Record SET Title = @Title WHERE RecordID = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Title", newTitle);
+                cmd.Parameters.AddWithValue("@Id", recordId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
         public List<Record> SortRecordsByTitle()
         {

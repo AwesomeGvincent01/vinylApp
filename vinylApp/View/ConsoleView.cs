@@ -258,7 +258,7 @@ namespace vinylApp.View
         public void DisplayCustomers(List<Customer> customers)
         {
             int pageSize = 20;
-            int totalPages = customers.Count / pageSize;
+            int totalPages = (int)Math.Ceiling((double)customers.Count / pageSize);
             int currentPage = 1;
 
             while (true)
@@ -267,31 +267,33 @@ namespace vinylApp.View
                 Console.WriteLine("ID   | First Name        | Last Name         | Email                      | Phone Number");
                 Console.WriteLine("-----|--------------------|-------------------|-----------------------------|----------------");
 
-                var pageData = customers.Skip(currentPage * pageSize).Take(pageSize);
+                var pageData = customers.Skip((currentPage - 1) * pageSize).Take(pageSize);
 
                 foreach (var c in pageData)
                 {
                     Console.WriteLine($"{c.CustomerId,-5} | {c.FirstName,-18} | {c.LastName,-18} | {c.Email,-28} | {c.PhoneNumber}");
                 }
+
                 Console.WriteLine("N - Next       P = Previous        Q - Quit");
                 Console.WriteLine($"\n{currentPage}/{totalPages}");
 
                 string input = Console.ReadLine();
 
-                if (input == "n" || input == "N")
+                if ((input == "n" || input == "N") && currentPage < totalPages)
                 {
                     currentPage++;
                 }
-                else if (input == "p" || input == "P")
+                else if ((input == "p" || input == "P") && currentPage > 1)
                 {
                     currentPage--;
                 }
-                else if (input == "q")
+                else if (input == "q" || input == "Q")
                 {
                     break;
                 }
             }
         }
+
 
 
 
@@ -319,8 +321,8 @@ namespace vinylApp.View
 
         public void DisplayRecords(List<Record> records)
         {
-            int pageSize = 20; 
-            int totalPages = records.Count / pageSize;
+            int pageSize = 20;
+            int totalPages = (int)Math.Ceiling((double)records.Count / pageSize);
             int currentPage = 1;
 
             while (true)
@@ -329,26 +331,27 @@ namespace vinylApp.View
                 Console.WriteLine("ID   | Title                   | Year | Artist      | Genre");
                 Console.WriteLine("-----|--------------------------|------|-------------|--------");
 
-                var pageData = records.Skip(currentPage * pageSize).Take(pageSize);
+                var pageData = records.Skip((currentPage - 1) * pageSize).Take(pageSize);
 
                 foreach (var r in pageData)
                 {
                     Console.WriteLine($"{r.RecordID,-5} | {r.Title,-25} | {r.ReleaseYear,-4} | {r.ArtistName,-11} | {r.GenreName}");
                 }
+
                 Console.WriteLine("N - Next       P = Previous        Q - Quit");
                 Console.WriteLine($"\n{currentPage}/{totalPages}");
 
                 string input = Console.ReadLine();
 
-                if (input == "n" || input == "N")
+                if ((input == "n" || input == "N") && currentPage < totalPages)
                 {
                     currentPage++;
                 }
-                else if (input == "p" || input == "P")
+                else if ((input == "p" || input == "P") && currentPage > 1)
                 {
                     currentPage--;
                 }
-                else if (input == "q")
+                else if (input == "q" || input == "Q")
                 {
                     break;
                 }
@@ -362,10 +365,11 @@ namespace vinylApp.View
 
 
 
+
         public void DisplayOrders(List<Order> orders)
         {
-            int pageSize = 20; 
-            int totalPages = orders.Count / pageSize;
+            int pageSize = 20;
+            int totalPages = (int)Math.Ceiling((double)orders.Count / pageSize);
             int currentPage = 1;
 
             while (true)
@@ -374,7 +378,7 @@ namespace vinylApp.View
                 Console.WriteLine("ID   | CustomerID | Order Date        | Status");
                 Console.WriteLine("-----|------------|-------------------|--------------");
 
-                var pageData = orders.Skip(currentPage * pageSize).Take(pageSize);
+                var pageData = orders.Skip((currentPage - 1) * pageSize).Take(pageSize);
 
                 foreach (var o in pageData)
                 {
@@ -386,15 +390,15 @@ namespace vinylApp.View
 
                 string input = Console.ReadLine();
 
-                if (input == "n" || input == "N")
+                if ((input == "n" || input == "N") && currentPage < totalPages)
                 {
                     currentPage++;
                 }
-                else if (input == "p" || input == "P")
+                else if ((input == "p" || input == "P") && currentPage > 1)
                 {
                     currentPage--;
                 }
-                else if (input == "q")
+                else if (input == "q" || input == "Q")
                 {
                     break;
                 }

@@ -3,6 +3,7 @@ using vinylApp.Model;
 using vinylApp.Repositories;
 using vinylApp.View;
 using vinylApp.Model;
+using Microsoft.SqlServer.Server;
 
 namespace vinylApp
 {
@@ -858,8 +859,32 @@ namespace vinylApp
         private static void InsertNewGenre()
         {
             view.DisplayMessage("Enter new genre name: ");
+            string genreName = view.GetInput().Trim();
 
-            string genreName = view.GetInput();
+            if (genreName.Length > 100)
+            {
+                view.DisplayMessage("Genre name too long. Maximum length is 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(genreName))
+            {
+                view.DisplayMessage("Genre name can't be empty\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (storageManager1.GenreNameExists(genreName))
+            {
+                view.DisplayMessage("Genre already exists! please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             Genre genre1 = new Genre(0, genreName);
             int generatedId = storageManager1.InsertGenre(genre1);
             view.DisplayMessage($"New genre inserted with ID: {generatedId}");
@@ -867,6 +892,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
         private static void DeleteGenreByName()
         {
@@ -1017,8 +1043,24 @@ namespace vinylApp
             view.DisplayMessage("Enter artist name: ");
             string artistName = view.GetInput().Trim().ToLower();
 
+            if (artistName.Length > 100)
+            {
+                view.DisplayMessage("Artist name too long, max length is 100 characters\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             view.DisplayMessage("Enter artist country: ");
             string country = view.GetInput();
+
+            if (country.Length > 50)
+            {
+                view.DisplayMessage("Country name too long, max length 50 characters\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(artistName))
             {
@@ -1036,7 +1078,6 @@ namespace vinylApp
                 return;
             }
 
-          
             if (storageManager1.ArtistNameExists(artistName))
             {
                 view.DisplayMessage("That artist name already exists! please try again.");
@@ -1058,6 +1099,7 @@ namespace vinylApp
 
 
 
+
         private static void DeleteArtistByName()
         {
             view.DisplayMessage("Enter name of the artist to delete: ");
@@ -1072,13 +1114,117 @@ namespace vinylApp
 
 
 
+
+
+        private static void InsertNewRecord()
+        {
+            view.DisplayMessage("Enter record title: ");
+            string title = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                view.DisplayMessage("Record title is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (title.Length > 100)
+            {
+                view.DisplayMessage("Record title can't be longer than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            view.DisplayMessage("Enter release year: ");
+            int year = view.GetIntInput();
+            if (year < 1800 || year > DateTime.Now.Year + 1)
+            {
+                view.DisplayMessage("Release year must be realistic (1800 to next year max).\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            view.DisplayMessage("Enter Artist ID: ");
+            int artistId = view.GetIntInput();
+            if (!storageManager1.ArtistExists(artistId))
+            {
+                view.DisplayMessage("That Artist ID does not exist.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            view.DisplayMessage("Enter Genre ID: ");
+            int genreId = view.GetIntInput();
+            if (!storageManager1.GenreExists(genreId))
+            {
+                view.DisplayMessage("That Genre ID does not exist.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            Record record1 = new Record(0, title, year, artistId, genreId);
+            int generatedId = storageManager1.InsertRecord(record1);
+
+            view.DisplayMessage($"New record inserted with ID: {generatedId}");
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
+        }
+
+        private static void DeleteRecordByTitle()
+        {
+            view.DisplayMessage("Enter title of the record to delete: ");
+            string title = view.GetInput();
+
+            int rowsAffected = storageManager1.DeleteRecordByTitle(title);
+            if (rowsAffected == -1)
+            {
+                view.DisplayMessage("This record cannot be deleted because it is linked to existing orders.");
+            }
+            else
+            {
+                view.DisplayMessage($"Rows affected: {rowsAffected}");
+            }
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
+        }
+
         private static void UpdateRecordTitle()
         {
             view.DisplayMessage("Enter record ID to update: ");
             int recordId = view.GetIntInput();
 
+            if (!storageManager1.RecordExists(recordId))
+            {
+                view.DisplayMessage("Record with this ID doesn't exist.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             view.DisplayMessage("Enter new record title: ");
-            string newTitle = view.GetInput();
+            string newTitle = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(newTitle))
+            {
+                view.DisplayMessage("Record title is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (newTitle.Length > 100)
+            {
+                view.DisplayMessage("Record title can't be longer than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             int rowsAffected = storageManager1.UpdateRecordTitle(recordId, newTitle);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
@@ -1087,46 +1233,6 @@ namespace vinylApp
             Console.ReadLine();
         }
 
-
-
-
-        private static void InsertNewRecord()
-        {
-            view.DisplayMessage("Enter record title: ");
-            string title = view.GetInput();
-
-            view.DisplayMessage("Enter release year: ");
-            int year = view.GetIntInput();
-
-            view.DisplayMessage("Enter Artist ID: ");
-            int artistId = view.GetIntInput();
-
-            view.DisplayMessage("Enter Genre ID: ");
-            int genreId = view.GetIntInput();
-
-            Record record1 = new Record(0, title, year, artistId, genreId);
-            int generatedId = storageManager1.InsertRecord(record1);
-
-            view.DisplayMessage($"New record inserted with ID: {generatedId}");
-
-            Console.WriteLine("Continue? (enter)");
-            Console.ReadLine();
-        }
-
-
-
-
-        private static void DeleteRecordByTitle()
-        {
-            view.DisplayMessage("Enter title of the record to delete: ");
-            string title = view.GetInput();
-
-            int rowsAffected = storageManager1.DeleteRecordByTitle(title);
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
-
-            Console.WriteLine("Continue? (enter)");
-            Console.ReadLine();
-        }
 
 
 
@@ -1140,7 +1246,23 @@ namespace vinylApp
             int orderId = view.GetIntInput();
 
             view.DisplayMessage("Enter new order status: ");
-            string newStatus = view.GetInput();
+            string newStatus = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(newStatus))
+            {
+                view.DisplayMessage("Order status is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (newStatus.Length > 20)
+            {
+                view.DisplayMessage("Order status must be 20 characters or less.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             int rowsAffected = storageManager1.UpdateOrderStatus(orderId, newStatus);
             view.DisplayMessage($"Rows affected: {rowsAffected}");
@@ -1160,10 +1282,34 @@ namespace vinylApp
 
             view.DisplayMessage("Enter order date (format: 0000-00-00): ");
             string input = view.GetInput();
-            DateTime date = DateTime.Parse(input);
+
+            DateTime date;
+            if (!DateTime.TryParse(input, out date))
+            {
+                view.DisplayMessage("Invalid date format.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter order status (Processing, Cancelled, Shipped, Delivered): ");
-            string status = view.GetInput();
+            string status = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(status))
+            {
+                view.DisplayMessage("Order status is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (status.Length > 20)
+            {
+                view.DisplayMessage("Order status must be 20 characters or less.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             Order order1 = new Order(0, customerId, date, status);
             int generatedId = storageManager1.InsertOrder(order1);
@@ -1172,8 +1318,9 @@ namespace vinylApp
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
-
         }
+
+
 
 
 
@@ -1184,11 +1331,19 @@ namespace vinylApp
             int orderId = view.GetIntInput();
 
             int rowsAffected = storageManager1.DeleteOrderById(orderId);
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
+            if (rowsAffected == 0)
+            {
+                view.DisplayMessage($"No order found with ID: {orderId}");
+            }
+            else
+            {
+                view.DisplayMessage($"Rows affected: {rowsAffected}");
+            }
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
