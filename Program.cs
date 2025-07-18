@@ -1170,7 +1170,16 @@ namespace vinylApp
             }
 
             view.DisplayMessage("Enter release year: ");
-            int year = view.GetIntInput();
+            string yearInput = view.GetInput();
+            int year;
+            if (!int.TryParse(yearInput, out year))
+            {
+                view.DisplayMessage("Release year must be a number\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (year < 1800 || year > DateTime.Now.Year + 1)
             {
                 view.DisplayMessage("Release year must be realistic (1800 to next year max).\n");
@@ -1180,7 +1189,16 @@ namespace vinylApp
             }
 
             view.DisplayMessage("Enter Artist ID: ");
-            int artistId = view.GetIntInput();
+            string artistInput = view.GetInput();
+            int artistId;
+            if (!int.TryParse(artistInput, out artistId))
+            {
+                view.DisplayMessage("IDs must be a number\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (!storageManager1.ArtistExists(artistId))
             {
                 view.DisplayMessage("That Artist ID does not exist.\n");
@@ -1190,7 +1208,16 @@ namespace vinylApp
             }
 
             view.DisplayMessage("Enter Genre ID: ");
-            int genreId = view.GetIntInput();
+            string genreInput = view.GetInput();
+            int genreId;
+            if (!int.TryParse(genreInput, out genreId))
+            {
+                view.DisplayMessage("IDs must be a number\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (!storageManager1.GenreExists(genreId))
             {
                 view.DisplayMessage("That Genre ID does not exist.\n");
@@ -1206,6 +1233,8 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
+
 
         private static void DeleteRecordByTitle()
         {
@@ -1310,7 +1339,15 @@ namespace vinylApp
         private static void InsertNewOrder()
         {
             view.DisplayMessage("Enter customer ID for this order: ");
-            int customerId = view.GetIntInput();
+            string customerInput = view.GetInput();
+            int customerId;
+            if (!int.TryParse(customerInput, out customerId))
+            {
+                view.DisplayMessage("IDs must be number\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter order date (format: 0000-00-00): ");
             string input = view.GetInput();
@@ -1351,6 +1388,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
