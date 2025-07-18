@@ -15,7 +15,7 @@ namespace vinylApp
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Connecting to the vinyl database system... may take a while, please be patient.");
+            Console.WriteLine("Connecting to VinylVault... may take a while, please be patient.");
             string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
 
 
@@ -556,7 +556,7 @@ namespace vinylApp
         {
             while (true)
             {
-                Console.WriteLine("\n--- Welcome to the vinyl database system! ---\nPlease choose to login or register below");
+                Console.WriteLine("\n--- Welcome to the VinylVault! ---\nPlease choose to login or register below");
                 Console.WriteLine("1. Login");
                 Console.WriteLine("2. Register");
                 Console.WriteLine("3. Exit");
@@ -599,7 +599,7 @@ namespace vinylApp
 
             }
         }
-  
+
 
 
         private static void Login()
@@ -608,7 +608,7 @@ namespace vinylApp
             string username = view.GetInput();
 
             view.DisplayMessage("Enter password: ");
-            string password = view.GetInput();
+            string password = view.GetInput2();
 
             currentUser = storageManager1.GetUserByUsernameAndPassword(username, password);
 
@@ -616,7 +616,6 @@ namespace vinylApp
             {
                 Console.WriteLine($"\nLogin successful! Welcome, {currentUser.Username} " +
                   $"({(currentUser.Role == "Admin" ? "Admin" : "User")})");
-
             }
             else
             {
@@ -627,14 +626,14 @@ namespace vinylApp
 
 
 
+
         private static void Register()
         {
             view.DisplayMessage("Enter a new username: ");
             string username = view.GetInput().Trim();
 
-
             view.DisplayMessage("Enter a password: ");
-            string password = view.GetInput().Trim();
+            string password = view.GetInput2().Trim();
 
 
 
@@ -956,9 +955,25 @@ namespace vinylApp
                 return;
             }
 
+            if (!firstName.All(c => char.IsLetter(c) || c == ' ' || c == '\''))
+            {
+                view.DisplayMessage("Name can only contain letters and spaces.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(lastName))
             {
                 view.DisplayMessage("Last name is required.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (!lastName.All(c => char.IsLetter(c) || c == ' ' || c == '\''))
+            {
+                view.DisplayMessage("Name can only contain letters and spaces.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -972,6 +987,14 @@ namespace vinylApp
                 return;
             }
 
+            if (!email.Contains("@") || !email.Contains(".") || email.Length < 5)
+            {
+                view.DisplayMessage("Invalid email. Please check if you've mistyped anything.n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(phoneNumber))
             {
                 view.DisplayMessage("Phone number is required.\n");
@@ -980,7 +1003,14 @@ namespace vinylApp
                 return;
             }
 
-          
+            if (!phoneNumber.All(char.IsDigit) || phoneNumber.Length < 7 || phoneNumber.Length > 15)
+            {
+                view.DisplayMessage("Phone number must contain only digits and be 7-15 digits long.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             if (storageManager1.CustomerExists(email, phoneNumber))
             {
                 view.DisplayMessage("A customer with this email/phone number already exists. Please try again\n");
@@ -997,6 +1027,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 

@@ -12,7 +12,7 @@ namespace vinylApp.View
         public string DisplayMainMenu()
         {
         
-            Console.WriteLine("\nWelcome to the vinyl record database system");
+            Console.WriteLine("\nWelcome to VinylVault");
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("Main Menu:");
             Console.WriteLine("1. Genre Menu");
@@ -299,6 +299,33 @@ namespace vinylApp.View
 
 
 
+        public string GetInput2()
+        {
+            string password = "";
+            ConsoleKeyInfo key;
+
+            while (true)
+            {
+                key = Console.ReadKey(true);
+
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password = password.Substring(0, password.Length - 1);
+                    Console.Write("\b \b");
+                }
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    password += key.KeyChar;
+                    Console.Write("*");
+                }
+            }
+
+            Console.WriteLine();
+            return password;
+        }
 
 
 
@@ -423,6 +450,8 @@ namespace vinylApp.View
         }
     }
 }
+
+
 
 
 
