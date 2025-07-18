@@ -427,16 +427,36 @@ namespace vinylApp
             if (choice == "1")
             {
                 view.PromptInputMessage("Enter start year: ");
-                startYear = view.GetIntInput();
-
+                string startInput = view.GetInput();
+                if (!int.TryParse(startInput, out startYear))
+                {
+                    view.DisplayMessage("Invalid  year, please make sure you use numbers.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    return;
+                }
 
                 view.DisplayMessage("Enter end year: ");
-                endYear = view.GetIntInput();
+                string endInput = view.GetInput();
+                if (!int.TryParse(endInput, out endYear))
+                {
+                    view.DisplayMessage("Invalid year, please make sure you use numbers.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    return;
+                }
             }
             else if (choice == "2")
             {
                 view.DisplayMessage1("Enter a decade (example: 1980): ");
-                startYear = view.GetIntInput();
+                string decadeInput = view.GetInput();
+                if (!int.TryParse(decadeInput, out startYear))
+                {
+                    view.DisplayMessage("Invalid decade input, please make sure you use numbers.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    return;
+                }
                 endYear = startYear + 9;
             }
             else
@@ -448,6 +468,7 @@ namespace vinylApp
             var results = storageManager1.GetRecordsByYearRange(startYear, endYear);
             view.DisplayRecords(results);
         }
+
 
 
 

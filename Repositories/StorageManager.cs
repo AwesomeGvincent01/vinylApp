@@ -39,6 +39,8 @@ namespace vinylApp.Repositories
             }
         }
 
+
+
         public List<Genre> GetAllGenres()
         {
             List<Genre> genres = new List<Genre>();
