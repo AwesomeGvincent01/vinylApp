@@ -938,15 +938,6 @@ namespace vinylApp
             view.DisplayMessage("Enter first name of new customer: ");
             string firstName = view.GetInput();
 
-            view.DisplayMessage("Enter last name of new customer: ");
-            string lastName = view.GetInput();
-
-            view.DisplayMessage("Enter EMAIL of new customer: ");
-            string email = view.GetInput();
-
-            view.DisplayMessage("Enter phone number of new customer: ");
-            string phoneNumber = view.GetInput();
-
             if (string.IsNullOrWhiteSpace(firstName))
             {
                 view.DisplayMessage("First name is required.\n");
@@ -962,6 +953,9 @@ namespace vinylApp
                 Console.ReadLine();
                 return;
             }
+
+            view.DisplayMessage("Enter last name of new customer: ");
+            string lastName = view.GetInput();
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
@@ -979,6 +973,9 @@ namespace vinylApp
                 return;
             }
 
+            view.DisplayMessage("Enter EMAIL of new customer: ");
+            string email = view.GetInput();
+
             if (string.IsNullOrWhiteSpace(email))
             {
                 view.DisplayMessage("Email is required.\n");
@@ -989,11 +986,14 @@ namespace vinylApp
 
             if (!email.Contains("@") || !email.Contains(".") || email.Length < 5)
             {
-                view.DisplayMessage("Invalid email. Please check if you've mistyped anything.n");
+                view.DisplayMessage("Invalid email. Please check if you've mistyped anything.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
+
+            view.DisplayMessage("Enter phone number of new customer: ");
+            string phoneNumber = view.GetInput();
 
             if (string.IsNullOrWhiteSpace(phoneNumber))
             {
@@ -1027,6 +1027,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
