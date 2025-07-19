@@ -348,6 +348,12 @@ namespace vinylApp.View
 
         public void DisplayRecords(List<Record> records)
         {
+            if (records == null || records.Count == 0)
+            {
+                Console.WriteLine("No results found.");
+                return;
+            }
+
             int pageSize = 20;
             int totalPages = (int)Math.Ceiling((double)records.Count / pageSize);
             int currentPage = 1;
@@ -384,6 +390,7 @@ namespace vinylApp.View
                 }
             }
         }
+
 
 
 
