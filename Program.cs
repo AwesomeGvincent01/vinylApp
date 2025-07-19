@@ -848,11 +848,35 @@ namespace vinylApp
 
         private static void CreateUser()
         {
-            Console.Write("Enter a new username: ");
-            string username = view.GetInput();
+            view.DisplayMessage("Enter a new username: ");
+            string username = view.GetInput().Trim();
 
-            view.DisplayMessage("Enter a password:");
-            string password = view.GetInput();
+            view.DisplayMessage("Enter a password: ");
+            string password = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                view.DisplayMessage("Your username and password can't be empty, please try again.\n");
+                return;
+            }
+
+            if (username.Length >= 100)
+            {
+                view.DisplayMessage("Boundary error: username must be less than 100 characters.\n");
+                return;
+            }
+
+            if (password.Length >= 100)
+            {
+                view.DisplayMessage("Boundary error: password must be less than 100 characters.\n");
+                return;
+            }
+
+            if (storageManager1.UsernameExists(username))
+            {
+                view.DisplayMessage("Username is already taken, please try again.\n");
+                return;
+            }
 
             view.DisplayMessage("Make this account admin? (y/n):");
             string ans = view.GetInput().Trim().ToLower();
@@ -860,8 +884,8 @@ namespace vinylApp
 
             User newUser = new User(0, username, password, role);
             int newId = storageManager1.InsertUser(newUser);
-            Console.WriteLine($"User created successfully. ID: {newId}");
 
+            Console.WriteLine($"User created successfully. ID: {newId}");
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
