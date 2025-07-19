@@ -465,8 +465,17 @@ namespace vinylApp
                 return;
             }
 
+            if (startYear > endYear)
+            {
+                view.DisplayMessage("Start year cannot be greater than the end year, plz try again.");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             var results = storageManager1.GetRecordsByYearRange(startYear, endYear);
             view.DisplayRecords(results);
+
         }
 
 
