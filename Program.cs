@@ -526,9 +526,15 @@ namespace vinylApp
                         break;
                     case "2":
                         Console.Write("Enter Customer ID: ");
-                        int customerId = view.GetIntInput();
+                        string idInput = view.GetInput();
+                        if (!int.TryParse(idInput, out int customerId))
+                        {
+                            view.DisplayMessage("IDs must be a number\n");
+                            break;
+                        }
                         view.DisplayOrders(storageManager1.GetOrdersByCustomerId(customerId));
                         break;
+
                     case "3":
                         Console.Write("Enter Order Status (example: Pending, Shipped): ");
                         string status = Console.ReadLine();
@@ -866,15 +872,31 @@ namespace vinylApp
         private static void UpdateGenreName()
         {
             view.DisplayMessage("Enter genre_id to update: ");
-            int genreId = view.GetIntInput();
+            string genreInput = view.GetInput();
+            if (!int.TryParse(genreInput, out int genreId))
+            {
+
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+
+
+                Console.ReadLine();
+                return;
+
+            }
+
+
             view.DisplayMessage("Enter new genre name");
             string genreName = view.GetInput();
+
             int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
+
             view.DisplayMessage($"Rows affected: {rowsAffected}");
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
         private static void InsertNewGenre()
         {
@@ -929,10 +951,18 @@ namespace vinylApp
         private static void UpdateCustomer()
         {
             view.DisplayMessage("Enter customer ID to update: ");
-            int customerId = view.GetIntInput();
+            string custInput = view.GetInput();
+            if (!int.TryParse(custInput, out int customerId))
+            {
+                view.DisplayMessage("IDs must be a number, please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter new first name: ");
             string firstName = view.GetInput();
+
 
             view.DisplayMessage("Enter new last name: ");
             string lastName = view.GetInput();
@@ -949,6 +979,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
@@ -1077,7 +1108,14 @@ namespace vinylApp
         private static void UpdateArtistName()
         {
             view.DisplayMessage("Enter artist ID to update: ");
-            int artistId = view.GetIntInput();
+            string artistInput = view.GetInput();
+            if (!int.TryParse(artistInput, out int artistId))
+            {
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter new artist name: ");
             string newName = view.GetInput();
@@ -1088,6 +1126,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
@@ -1279,7 +1318,14 @@ namespace vinylApp
         private static void UpdateRecordTitle()
         {
             view.DisplayMessage("Enter record ID to update: ");
-            int recordId = view.GetIntInput();
+            string input = view.GetInput();
+            if (!int.TryParse(input, out int recordId))
+            {
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             if (!storageManager1.RecordExists(recordId))
             {
@@ -1322,10 +1368,18 @@ namespace vinylApp
 
 
 
+
         private static void UpdateOrderStatus()
         {
             view.DisplayMessage("Enter order ID to update: ");
-            int orderId = view.GetIntInput();
+            string orderInput = view.GetInput();
+            if (!int.TryParse(orderInput, out int orderId))
+            {
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter new order status: ");
             string newStatus = view.GetInput().Trim();
@@ -1352,6 +1406,7 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
