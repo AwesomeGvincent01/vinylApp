@@ -246,6 +246,12 @@ namespace vinylApp.View
 
         public void DisplayGenres(List<Genre> genres)
         {
+            if (genres == null || genres.Count == 0)
+            {
+                Console.WriteLine("No results found");
+                return;
+            }
+
             Console.WriteLine("\nID  | Genre Name");
             Console.WriteLine("----|----------------");
             foreach (Genre genre in genres)
@@ -255,8 +261,15 @@ namespace vinylApp.View
         }
 
 
+
         public void DisplayCustomers(List<Customer> customers)
         {
+            if (customers == null || customers.Count == 0)
+            {
+                Console.WriteLine("No results found");
+                return;
+            }
+
             int pageSize = 20;
             int totalPages = (int)Math.Ceiling((double)customers.Count / pageSize);
             int currentPage = 1;
@@ -299,6 +312,7 @@ namespace vinylApp.View
 
 
 
+
         public string GetInput2()
         {
             string password = "";
@@ -333,6 +347,12 @@ namespace vinylApp.View
 
         public void DisplayArtists(List<Artist> artists)
         {
+            if (artists == null || artists.Count == 0)
+            {
+                Console.WriteLine("No results found");
+                return;
+            }
+
             Console.WriteLine("ID   | Name                     | Country");
             Console.WriteLine("-----|--------------------------|--------");
 
@@ -341,6 +361,7 @@ namespace vinylApp.View
                 Console.WriteLine($"{artist.ArtistId,-5} | {artist.ArtistName,-23} | {artist.Country}");
             }
         }
+
 
 
 
@@ -402,6 +423,12 @@ namespace vinylApp.View
 
         public void DisplayOrders(List<Order> orders)
         {
+            if (orders == null || orders.Count == 0)
+            {
+                Console.WriteLine("No results found");
+                return;
+            }
+
             int pageSize = 20;
             int totalPages = (int)Math.Ceiling((double)orders.Count / pageSize);
             int currentPage = 1;
@@ -438,6 +465,7 @@ namespace vinylApp.View
                 }
             }
         }
+
 
 
 
