@@ -636,8 +636,8 @@ namespace vinylApp.Repositories
            Artist.ArtistName AS ArtistName,
            Genre.Name AS GenreName
     FROM Record
-    JOIN Artist ON Record.ArtistID = Artist.ArtistID
-    JOIN Genre ON Record.GenreID = Genre.GenreID
+    INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+    INNER JOIN Genre ON Record.GenreID = Genre.GenreID
     ORDER BY Record.RecordID;";
 
             using (SqlCommand command = new SqlCommand(query, conn))
@@ -678,8 +678,8 @@ namespace vinylApp.Repositories
                Artist.ArtistName AS ArtistName,
                Genre.Name AS GenreName
         FROM Record
-        JOIN Artist ON Record.ArtistID = Artist.ArtistID
-        JOIN Genre ON Record.GenreID = Genre.GenreID
+        INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        INNER JOIN Genre ON Record.GenreID = Genre.GenreID
         WHERE Artist.ArtistName LIKE @input
         ORDER BY Record.Title;";
 
@@ -841,8 +841,8 @@ namespace vinylApp.Repositories
                Artist.ArtistName AS ArtistName,
                Genre.Name AS GenreName
         FROM Record
-        JOIN Artist ON Record.ArtistID = Artist.ArtistID
-        JOIN Genre ON Record.GenreID = Genre.GenreID
+        INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        INNER JOIN Genre ON Record.GenreID = Genre.GenreID
         WHERE Record.ReleaseYear BETWEEN @startYear AND @endYear
         ORDER BY Record.ReleaseYear;";
 
@@ -909,9 +909,9 @@ namespace vinylApp.Repositories
         public List<Order> GetOrdersByCustomerId(int customerId)
         {
             List<Order> orders = new List<Order>();
-            string query = "SELECT * FROM [Order] WHERE CustomerID = @CustomerID";
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlCommand cmd = new SqlCommand("GetOrderByCustomerIdStored", conn))
             {
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@CustomerID", customerId);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
