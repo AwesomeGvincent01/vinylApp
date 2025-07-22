@@ -532,6 +532,7 @@ namespace vinylApp
         {
             while (true)
             {
+                Console.Clear();
                 string choice = view.DisplayOrderSubmenu();
                 switch (choice)
                 {
@@ -551,12 +552,12 @@ namespace vinylApp
                         break;
 
                     case "3":
-                        Console.Write("Enter Order Status (example: Pending, Shipped): ");
+                        Console.Write("Enter Order Status (example: Shipped, processing, delivered, cancelled): ");
                         string status = Console.ReadLine();
                         view.DisplayOrders(storageManager1.GetOrdersByStatus(status));
                         break;
                     case "4":
-                        Console.Write("Enter start date (using this format : 000-00-00): ");
+                        Console.Write("Enter start date (using this format : 0000-00-00): ");
                         DateTime start = DateTime.Parse(Console.ReadLine());
 
                         Console.Write("Enter end date (using this format again: 0000-00-00): ");
@@ -730,6 +731,7 @@ namespace vinylApp
         {
             while (true)
             {
+                Console.Clear();
                 string choice = view.DisplayMainMenu();
 
                 switch (choice)
@@ -777,12 +779,13 @@ namespace vinylApp
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("\n--- User Menu ---");
                 Console.WriteLine("1. View All Records");
                 Console.WriteLine("2. View All Genres");
                 Console.WriteLine("3. View All Artists");
                 Console.WriteLine("4. Logout");
-                Console.Write("Choose a option: ");
+                Console.Write("Choose an option: ");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -790,31 +793,38 @@ namespace vinylApp
                     case "1":
                         HandleUserRecordSubMenu();
                         break;
+
                     case "2":
                         view.DisplayGenres(storageManager1.GetAllGenres());
+                        Console.WriteLine("Press Enter to return to the menu.");
+                        Console.ReadLine();
                         break;
+
                     case "3":
                         view.DisplayArtists(storageManager1.GetAllArtists());
+                        Console.WriteLine("Press Enter to return to the menu.");
+                        Console.ReadLine();
                         break;
+
                     case "4":
                         Console.WriteLine("Logging out... please wait...");
                         currentUser = null;
                         return;
+
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("\nInvalid input! ");
                         Console.ResetColor();
                         Console.ForegroundColor = ConsoleColor.White;
 
-                        Console.WriteLine("Hello, user! please choose a valid option. If you're confused, the options are number based.\n\n " +
-                            "" +
-                            "For example, for the genre menu, you can see that it is assigned to the number '2', so, if you would\n like to access the customer menu, simply input '2' into the program, and so on.\n");
+                        Console.WriteLine("Hello, user! Please choose a valid option. If you're confused, the options are number based.\n\n" +
+                            "For example, for the genre menu, you can see that it is assigned to the number '2'. So, if you would\n" +
+                            "like to access the genre menu, simply input '2' into the program, and so on.\n");
                         Console.ResetColor();
                         break;
                 }
             }
         }
-
 
 
         private static void HandleUserRecordSubMenu()
@@ -1174,25 +1184,6 @@ namespace vinylApp
             view.DisplayMessage("Enter artist name: ");
             string artistName = view.GetInput().Trim().ToLower();
 
-            if (artistName.Length > 100)
-            {
-                view.DisplayMessage("Artist name too long, max length is 100 characters\n");
-                Console.WriteLine("Continue? (enter)");
-                Console.ReadLine();
-                return;
-            }
-
-            view.DisplayMessage("Enter artist country: ");
-            string country = view.GetInput();
-
-            if (country.Length > 50)
-            {
-                view.DisplayMessage("Country name too long, max length 50 characters\n");
-                Console.WriteLine("Continue? (enter)");
-                Console.ReadLine();
-                return;
-            }
-
             if (string.IsNullOrWhiteSpace(artistName))
             {
                 view.DisplayMessage("Artist name can't be empty\n");
@@ -1201,9 +1192,9 @@ namespace vinylApp
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(country))
+            if (artistName.Length > 100)
             {
-                view.DisplayMessage("Artist country can't be empty\n");
+                view.DisplayMessage("Artist name too long, max length is 100 characters\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -1217,6 +1208,25 @@ namespace vinylApp
                 return;
             }
 
+            view.DisplayMessage("Enter artist country: ");
+            string country = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(country))
+            {
+                view.DisplayMessage("Artist country can't be empty\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (country.Length > 50)
+            {
+                view.DisplayMessage("Country name too long, max length 50 characters\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
             Artist artist1 = new Artist(0, artistName, country);
             int generatedId = storageManager1.InsertArtist(artist1);
             view.DisplayMessage($"New artist inserted with ID: {generatedId}");
@@ -1224,6 +1234,8 @@ namespace vinylApp
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
+
 
 
 

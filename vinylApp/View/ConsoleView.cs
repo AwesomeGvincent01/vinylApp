@@ -228,6 +228,9 @@ namespace vinylApp.View
         }
 
 
+
+
+
         public string DisplayUserSubMenu()
         {
             Console.WriteLine("\n--- Record Menu ---");
