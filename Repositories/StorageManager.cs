@@ -607,7 +607,14 @@ namespace vinylApp.Repositories
         public List<Record> GetRecordsByTitle(string keyword)
         {
             List<Record> records = new List<Record>();
-            string sql = "SELECT * FROM Record WHERE Title LIKE @Keyword";
+            string sql = @"SELECT Record.RecordID, Record.Title, Record.ReleaseYear,
+                          Record.ArtistID, Record.GenreID,
+                          Artist.ArtistName AS ArtistName, Genre.Name AS GenreName
+                   FROM Record
+                   INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+                   INNER JOIN Genre ON Record.GenreID = Genre.GenreID
+                   WHERE Record.Title LIKE @Keyword";
+
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Keyword", "%" + keyword + "%");
@@ -620,12 +627,21 @@ namespace vinylApp.Repositories
                         int year = Convert.ToInt32(reader["ReleaseYear"]);
                         int artistId = Convert.ToInt32(reader["ArtistID"]);
                         int genreId = Convert.ToInt32(reader["GenreID"]);
-                        records.Add(new Record(id, title, year, artistId, genreId));
+                        string artistName = reader["ArtistName"].ToString();
+                        string genreName = reader["GenreName"].ToString();
+
+                        Record record = new Record(id, title, year, artistId, genreId);
+                        record.ArtistName = artistName;
+                        record.GenreName = genreName;
+
+                        records.Add(record);
                     }
                 }
             }
+
             return records;
         }
+
 
         public List<Record> GetAllRecords()
         {
