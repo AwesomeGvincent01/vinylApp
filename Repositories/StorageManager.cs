@@ -16,6 +16,7 @@ namespace vinylApp.Repositories
     {
         private SqlConnection conn;
 
+      
         public StorageManager(string connectionString)
         {
             try
@@ -122,7 +123,7 @@ namespace vinylApp.Repositories
 
 
 
-
+        //change an existing genre’s name, returns rows affected(0 or 1)
         public int UpdateGenreName(int genreId, string genreName)
         {
             string sql = "UPDATE Genre SET Name = @GenreName WHERE GenreID = @GenreId";

@@ -32,7 +32,7 @@ namespace vinylApp.View
         {
          
             Console.WriteLine("\n--- Genre Menu ---");
-            Console.WriteLine("1. View All Genres");
+            Console.WriteLine("1. View Genres");
             Console.WriteLine("2. Update Genre Name by ID");
             Console.WriteLine("3. Insert New Genre");
             Console.WriteLine("4. Delete Genre by Name");
@@ -45,7 +45,7 @@ namespace vinylApp.View
         public string DisplayGenreSubmenu()
         {
             Console.WriteLine("\n--- View Genres ---");
-            Console.WriteLine("1. iew All Genres");
+            Console.WriteLine("1. View All Genres");
             Console.WriteLine("2. Search by Name");
             Console.WriteLine("3. Sort alphabetically");
             Console.WriteLine("4. Return to Genre Menu");
@@ -251,7 +251,7 @@ namespace vinylApp.View
                 Console.WriteLine("No results found");
                 return;
             }
-
+            Console.Clear();
             Console.WriteLine("\nID  | Genre Name");
             Console.WriteLine("----|----------------");
             foreach (Genre genre in genres)

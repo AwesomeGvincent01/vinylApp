@@ -15,19 +15,25 @@ namespace vinylApp
         static void Main(string[] args)
         {
 
+            //keeps user updated/informed on system status while VinylVault is loading
             Console.WriteLine("Connecting to VinylVault... may take a while, please be patient.");
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\vgkel\\Downloads\\VincentKellett_SQLProj 2 1\\VincentKellett_SQLProj 2\\VincentKellett_SQLProj\\vinylDBTrue\\vinylDBTrue.mdf\";Integrated Security=True;Connect Timeout=30;Encrypt=True";
+            string mdfPath = Path.Combine(AppContext.BaseDirectory, "vinylVault.mdf");
+            string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={mdfPath};Integrated Security=True;Connect Timeout=30;";
 
-
+            //storagemanager is the one class that manages all SQL operations, so it is the one that connects to the database
+            //it is also the one that is used to access all other classes, so it is the one that is instantiated first
             storageManager1 = new StorageManager(connectionString);
+            //all (or at least most) of the UI methods. Keeps program.cs less cluttered.
             view = new ConsoleView();
 
 
 
 
 
-
+            //initializes  account/login loop
             HandleAccountMenu();
+
+            // closes db connection on exit
             storageManager1.CloseConnection();
         }
 
