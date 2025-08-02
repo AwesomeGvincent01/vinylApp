@@ -893,20 +893,14 @@ namespace vinylApp.Repositories
 
 
 
-
         public List<Order> GetOrders(User viewer)
         {
             List<Order> orders = new List<Order>();
 
-            string sql = viewer.Role == "Customer"
-                ? "SELECT * FROM [Order] WHERE CustomerID = @cid"
-                : "SELECT * FROM [Order]";
+            string sql = "SELECT * FROM [Order]";
 
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                if (viewer.Role == "Customer")
-                    cmd.Parameters.AddWithValue("@cid", viewer.UserID);
-
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

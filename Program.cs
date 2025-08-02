@@ -952,9 +952,9 @@ namespace vinylApp
             view.DisplayMessage("Enter new genre name: ");
             string genreName = view.GetInput().Trim();
 
-            if (genreName.Length > 100)
+            if (genreName.Length > 50)
             {
-                view.DisplayMessage("Genre name too long. Maximum length is 100 characters.\n");
+                view.DisplayMessage("Genre name too long. Maximum length is 50 characters.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
