@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vinylApp.Model;
+using System.Data;
+
 
 namespace vinylApp.View
 {
     public class ConsoleView
     {
+
+
+
         public string DisplayMainMenu()
         {
         
@@ -21,7 +26,8 @@ namespace vinylApp.View
             Console.WriteLine("4. Record Menu");
             Console.WriteLine("5. Order Menu");
             Console.WriteLine("6. Create User/Admin Account");
-            Console.WriteLine("7. Logout");
+            Console.WriteLine("7. T1 Reports");
+            Console.WriteLine("8. Logout");
             Console.Write("Select a option: ");
 
             return Console.ReadLine();
@@ -419,6 +425,58 @@ namespace vinylApp.View
 
 
 
+        public string DisplayReportsMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("\n--- Implentations of reports I wrote in my original term 1 database documentation ---");
+            Console.WriteLine("1.  Gmail customers");
+            Console.WriteLine("2.  Records released after 1975");
+            Console.WriteLine("3.  Customers with phone starting 021");
+            Console.WriteLine("4.  Cancelled orders (newest first)");
+            Console.WriteLine("5.  Rock records (GenreID = 1)");
+            Console.WriteLine("6.  Orders per customer (count)");
+            Console.WriteLine("7.  Records per genre (count)");
+            Console.WriteLine("8.  Records per artist (count)");
+            Console.WriteLine("9.  Ordered records with customer + qty + date");
+            Console.WriteLine("10. Total ordered quantity per record");
+            Console.WriteLine("11. Titles released in a specific year (enter year)");
+            Console.WriteLine("12. Customers with total ordered qty > N (enter N)");
+            Console.WriteLine("13. Total qty per customer per artist");
+            Console.WriteLine("14. Customers with incomplete orders (no order details)");
+            Console.WriteLine("15. Total ordered quantity per genre");
+            Console.WriteLine("16. Return to Admin menu");
+            Console.Write("Select an option: ");
+            return Console.ReadLine();
+        }
+
+        public void DisplayReport(IDataReader reader)
+        {
+            Console.WriteLine();
+            int colCount = reader.FieldCount;
+
+            // header
+            for (int i = 0; i < colCount; i++)
+            {
+                Console.Write((reader.GetName(i) + " | ").PadRight(22));
+            }
+            Console.WriteLine();
+            Console.WriteLine(new string('-', colCount * 22));
+
+            // rows
+            while (reader.Read())
+            {
+                for (int i = 0; i < colCount; i++)
+                {
+                    var val = reader.IsDBNull(i) ? "" : reader.GetValue(i)?.ToString();
+                    Console.Write((val + " | ").PadRight(22));
+                }
+                Console.WriteLine();
+            }
+
+            reader.Close();
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
+        }
 
 
 
@@ -488,6 +546,9 @@ namespace vinylApp.View
         }
     }
 }
+
+
+
 
 
 

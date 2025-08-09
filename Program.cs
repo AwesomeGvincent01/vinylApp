@@ -4,6 +4,8 @@ using vinylApp.Repositories;
 using vinylApp.View;
 using vinylApp.Model;
 using Microsoft.SqlServer.Server;
+using System.Globalization;
+
 
 namespace vinylApp
 {
@@ -12,13 +14,16 @@ namespace vinylApp
         private static StorageManager storageManager1;
         private static ConsoleView view;
 
+
+
+
         static void Main(string[] args)
         {
 
             //keeps user updated/informed on system status while VinylVault is loading
             Console.WriteLine("Connecting to VinylVault... may take a while, please be patient.");
             string mdfPath = Path.Combine(AppContext.BaseDirectory, "vinylVault.mdf");
-            string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={mdfPath};Integrated Security=True;Connect Timeout=30;";
+            string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""C:\Users\vgkel\Downloads\VKPROJ 1 1 (3) 1\VinylVaultApplicationSol\VinylVaultApplicationSol\VinylVaultApplicationSol\vinylApp (1)\vinylVault.mdf"";Integrated Security=True;Connect Timeout=30";
 
             //storagemanager is the one class that manages all SQL operations, so it is the one that connects to the database
             //it is also the one that is used to access all other classes, so it is the one that is instantiated first
@@ -70,6 +75,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to update genre name, you can see that it is assigned to the number '2', so, if you would\n like to update genre name, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
 
                 }
@@ -107,6 +114,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to view all genres, you can see that it is assigned to the number '1', so, if you would\n like to view all genres, simply input '1' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -149,6 +158,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to update customer name, you can see that it is assigned to the number '2', so, if you would\n like to update customer name, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -202,6 +213,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to search for a customer by their email, you can see that it is assigned to the number '3', so, if you would\n like to search for a customer by their email, simply input '3' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -242,6 +255,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to update artist name, you can see that it is assigned to the number '2', so, if you would\n like to update artist name, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -279,6 +294,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to update record title, you can see that it is assigned to the number '2', so, if you would\n like to update record title, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -334,6 +351,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to update record title, you can see that it is assigned to the number '2', so, if you would\n like to update record title, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -381,6 +400,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to search for records by title, you can see that it is assigned to the number '2', so, if you would\n like to search for records by title, simply input '2' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -413,6 +434,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to filter by year range, you can see that it is assigned to the number '1', so, if you would\n like to filter by year range, simply input '1' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -522,6 +545,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to view all orders, you can see that it is assigned to the number '1', so, if you would\n like to view all orders, simply input '1' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -543,11 +568,18 @@ namespace vinylApp
                     case "2":
                         Console.Write("Enter Customer ID: ");
                         string idInput = view.GetInput();
-                        if (!int.TryParse(idInput, out int customerId))
+
+                        if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int customerId))
                         {
                             view.DisplayMessage("IDs must be a number\n");
                             break;
                         }
+                        if (customerId <= 0)
+                        {
+                            view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
+                            break;
+                        }
+
                         view.DisplayOrders(storageManager1.GetOrdersByCustomerId(customerId));
                         break;
 
@@ -557,17 +589,50 @@ namespace vinylApp
                         view.DisplayOrders(storageManager1.GetOrdersByStatus(status));
                         break;
                     case "4":
-                        Console.Write("Enter start date (using this format : 0000-00-00): ");
-                        DateTime start = DateTime.Parse(Console.ReadLine());
+                        Console.Write("Enter start date (yyyy-MM-dd or dd/MM/yyyy): ");
+                        string startInput = view.GetInput();
+                        Console.Write("Enter end date (yyyy-MM-dd or dd/MM/yyyy): ");
+                        string endInput = view.GetInput();
 
-                        Console.Write("Enter end date (using this format again: 0000-00-00): ");
-                        DateTime end = DateTime.Parse(Console.ReadLine());
+                        if (!DateTime.TryParse(startInput, out DateTime start) ||
+                            !DateTime.TryParse(endInput, out DateTime end))
+                        {
+                            view.DisplayMessage("Invalid date. Please enter a date like 2025-03-15 or 15/03/2025.\n");
+                            break;
+                        }
+
+                        if (start < new DateTime(1900, 1, 1) || start > new DateTime(2100, 12, 31) ||
+                            end < new DateTime(1900, 1, 1) || end > new DateTime(2100, 12, 31))
+                        {
+                            view.DisplayMessage("Invalid date. Please enter a date between 1900-01-01 and 2100-12-31.\n");
+                            break;
+                        }
+
+                        if (start >= end)
+                        {
+                            view.DisplayMessage("Start date must be before end date.\n");
+                            break;
+                        }
 
                         view.DisplayOrders(storageManager1.GetOrdersByDateRange(start, end));
+
+
                         break;
                     case "5":
                         Console.Write("Enter Order ID to view details: ");
-                        int orderId = view.GetIntInput();
+                        string orderInput = view.GetInput();
+
+                        if (string.IsNullOrWhiteSpace(orderInput) || !int.TryParse(orderInput, out int orderId))
+                        {
+                            view.DisplayMessage("IDs must be a number\n");
+                            break;
+                        }
+                        if (orderId <= 0)
+                        {
+                            view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
+                            break;
+                        }
+
                         view.DisplayOrderDetails(storageManager1.GetOrderDetails(orderId));
                         break;
                     case "6":
@@ -582,6 +647,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to view all genres, you can see that it is assigned to the number '1', so, if you would\n like to view all genres, simply input '1' into the program, and so on!\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -593,12 +660,21 @@ namespace vinylApp
 
 
 
+
+
+
+
         private static User currentUser = null;
 
         private static void HandleAccountMenu()
         {
+            bool firstRun = true;  
+
             while (true)
             {
+                if (!firstRun) Console.Clear();  //made it so it doesn't clear the "connection succeessful" message
+                firstRun = false;               
+
                 Console.WriteLine("\n--- Welcome to the VinylVault! ---\nPlease choose to login or register below");
                 Console.WriteLine("1. Login");
                 Console.WriteLine("2. Register");
@@ -627,6 +703,8 @@ namespace vinylApp
                             "" +
                             "For example, if you'd like to login, you can see that it is assigned to the number '1', so, if you would\n like to login, simply input '1' into the program, and if you'd like to register/create a new account, simply input '2'! then, if you would like to exit the program, obviously, input '3'.\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
@@ -636,12 +714,10 @@ namespace vinylApp
                         HandleAdminMainMenu();
                     else
                         HandleUserMainMenu();
-
                 }
-               
-
             }
         }
+
 
 
 
@@ -663,10 +739,13 @@ namespace vinylApp
             else
             {
                 Console.WriteLine("Login failed. Invalid username or password.");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
             }
         }
 
 
+      
 
 
 
@@ -684,18 +763,25 @@ namespace vinylApp
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
                 view.DisplayMessage("Your username and password can't be empty, please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
                 return;
+               
             }
 
             if (username.Length >= 100)
             {
                 view.DisplayMessage("Boundary error: you may only have a username with up to *100* characters. Please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
                 return;
             }
 
             if (password.Length >= 100)
             {
                 view.DisplayMessage("Boundary error: you may only have a password with up to *100* characters. Please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
                 return;
             }
 
@@ -714,11 +800,16 @@ namespace vinylApp
             if (storageManager1.UsernameExists(username))
             {
                 view.DisplayMessage("Username is already taken, please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
                 return;
             }
 
             int newId = storageManager1.InsertUser(newUser);
             Console.WriteLine($"Registration complete. Your user ID is {newId}.");
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
+
         }
 
 
@@ -736,25 +827,14 @@ namespace vinylApp
 
                 switch (choice)
                 {
-                    case "1":
-                        HandleGenreMenu();
-                        break;
-                    case "2":
-                        HandleCustomerMenu();
-                        break;
-                    case "3":
-                        HandleArtistMenu();
-                        break;
-                    case "4":
-                        HandleRecordMenu();
-                        break;
-                    case "5":
-                        HandleOrderMenu();
-                        break;
-                    case "6":
-                        CreateUser();
-                        break;
-                    case "7":
+                    case "1": HandleGenreMenu(); break;
+                    case "2": HandleCustomerMenu(); break;
+                    case "3": HandleArtistMenu(); break;
+                    case "4": HandleRecordMenu(); break;
+                    case "5": HandleOrderMenu(); break;
+                    case "6": CreateUser(); break;
+                    case "7": HandleReportsMenu(); break;  
+                    case "8":
                         Console.WriteLine("Logging out...");
                         currentUser = null;
                         return;
@@ -768,11 +848,16 @@ namespace vinylApp
                             "" +
                             "For example, for the customer menu, you can see that it is assigned to the number '2', so, if you would\n like to access the customer menu, simply input '2' into the program, and so on.\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
                 }
 
             }
         }
+
+
+
 
 
         private static void HandleUserMainMenu()
@@ -821,7 +906,197 @@ namespace vinylApp
                             "For example, for the genre menu, you can see that it is assigned to the number '2'. So, if you would\n" +
                             "like to access the genre menu, simply input '2' into the program, and so on.\n");
                         Console.ResetColor();
+                        Console.WriteLine("Continue!? (enter)");
+                        Console.ReadLine();
                         break;
+                }
+            }
+        }
+
+
+        private static void HandleReportsMenu()
+        {
+            while (true)
+            {
+                string choice = view.DisplayReportsMenu(); //Report switch (thought I wasn't supposed to use sql commands in program.cs but it was recommended by teacheer)
+                try
+                {
+                    switch (choice)
+                    {
+                        case "1": // all customers "gmail" email type
+                            {
+                                using var r = storageManager1.RunReport(
+                                    "SELECT FirstName, LastName FROM Customer WHERE Email LIKE '%@gmail.com'");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "2": // records after 1975
+                            {
+                                using var r = storageManager1.RunReport(
+                                    "SELECT Title, ReleaseYear FROM Record WHERE ReleaseYear > 1975 ORDER BY ReleaseYear ASC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "3": // phone starts 021
+                            {
+                                using var r = storageManager1.RunReport(
+                                    "SELECT FirstName, LastName FROM Customer WHERE PhoneNumber LIKE '021%' ORDER BY LastName ASC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "4": // cancelled orders (sorted newest to oldest)
+                            {
+                                using var r = storageManager1.RunReport(
+                                    "SELECT OrderID, CustomerID, OrderDate FROM [Order] WHERE Status = 'Cancelled' ORDER BY OrderDate DESC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "5": // rock records (GenreID = 1)
+                            {
+                                using var r = storageManager1.RunReport(
+                                    "SELECT Title, ReleaseYear FROM Record WHERE GenreID = 1");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "6": // orders per customer (count)
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Customer.FirstName, Customer.LastName, COUNT([Order].CustomerID) AS TotalOrders
+                          FROM Customer INNER JOIN [Order] ON Customer.CustomerID = [Order].CustomerID
+                          GROUP BY Customer.FirstName, Customer.LastName
+                          ORDER BY TotalOrders DESC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "7": // records per genre (count)
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Genre.[Name], COUNT(Record.RecordID) AS RecordAmount
+                          FROM Genre INNER JOIN Record ON Genre.GenreID = Record.GenreID
+                          GROUP BY Genre.[Name]");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "8": // records per artist (count)
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Artist.ArtistName, COUNT(Record.RecordID) AS Records
+                          FROM Artist INNER JOIN Record ON Artist.ArtistID = Record.ArtistID
+                          GROUP BY Artist.ArtistName
+                          ORDER BY Artist.ArtistName ASC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "9":
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Customer.FirstName, Customer.LastName, Record.Title, [Order].OrderDate, OrderDetail.Quantity
+                          FROM Customer
+                          INNER JOIN [Order] ON Customer.CustomerID = [Order].CustomerID
+                          INNER JOIN OrderDetail ON [Order].OrderID = OrderDetail.OrderID
+                          INNER JOIN Record ON OrderDetail.RecordID = Record.RecordID");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "10": // total ordered quantity per record
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Record.Title, SUM(OrderDetail.Quantity) AS TotalQuantity
+                          FROM Record INNER JOIN OrderDetail ON Record.RecordID = OrderDetail.RecordID
+                          GROUP BY Record.Title
+                          ORDER BY TotalQuantity DESC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "11": // titles released in a specific year
+                            {
+                                view.DisplayMessage1("Enter release year: ");
+                                string input = view.GetInput();
+                                if (!int.TryParse(input, out int year))
+                                {
+                                    view.DisplayMessage("Invalid year.\n");
+                                    break;
+                                }
+
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Record.Title, Record.ReleaseYear, Artist.ArtistName
+                          FROM Record INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+                          WHERE Record.ReleaseYear = @year",
+                                    p => p.AddWithValue("@year", year));
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "12": // customers with total qty > N
+                            {
+                                view.DisplayMessage1("Enter minimum total quantity: ");
+                                string input = view.GetInput();
+                                if (!int.TryParse(input, out int qty))
+                                {
+                                    view.DisplayMessage("Invalid number.\n");
+                                    break;
+                                }
+
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Customer.FirstName, Customer.LastName, SUM(OrderDetail.Quantity) AS TotalQuantity
+                          FROM Customer
+                          INNER JOIN [Order] ON Customer.CustomerID = [Order].CustomerID
+                          INNER JOIN OrderDetail ON OrderDetail.OrderID = [Order].OrderID
+                          GROUP BY Customer.FirstName, Customer.LastName
+                          HAVING SUM(OrderDetail.Quantity) > @q",
+                                    p => p.AddWithValue("@q", qty));
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "13": // total qty per customer per artist
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Customer.FirstName, Customer.LastName, Artist.ArtistName, SUM(OrderDetail.Quantity) AS TotalQuantity
+                          FROM Customer
+                          INNER JOIN [Order] ON Customer.CustomerID = [Order].CustomerID
+                          INNER JOIN OrderDetail ON [Order].OrderID = OrderDetail.OrderID
+                          INNER JOIN Record ON OrderDetail.RecordID = Record.RecordID
+                          INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+                          GROUP BY Customer.FirstName, Customer.LastName, Artist.ArtistName");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "14": // Incomplete orders (no details). Also used left joins to displays all customers, even  without linked orders.
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Customer.FirstName, Customer.LastName, SUM(OrderDetail.Quantity) AS Total
+                          FROM Customer
+                          LEFT JOIN [Order] ON Customer.CustomerID = [Order].CustomerID
+                          LEFT JOIN OrderDetail ON [Order].OrderID = OrderDetail.OrderID
+                          GROUP BY Customer.FirstName, Customer.LastName
+                          HAVING SUM(OrderDetail.Quantity) IS NULL");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "15": // total qty per genre
+                            {
+                                using var r = storageManager1.RunReport(
+                                    @"SELECT Genre.[Name], SUM(OrderDetail.Quantity) AS TotalQuantity
+                          FROM Record
+                          INNER JOIN Genre ON Record.GenreID = Genre.GenreID
+                          INNER JOIN OrderDetail ON Record.RecordID = OrderDetail.RecordID
+                          GROUP BY Genre.[Name]
+                          ORDER BY TotalQuantity DESC");
+                                view.DisplayReport(r);
+                                break;
+                            }
+                        case "16":
+                            return;
+
+                        default:
+                            view.DisplayError11("Invalid input! please choose a number from the list");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    view.DisplayMessage($"Error running report: {ex.Message}\n");
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
                 }
             }
         }
@@ -918,34 +1193,7 @@ namespace vinylApp
 
 
 
-        private static void UpdateGenreName()
-        {
-            view.DisplayMessage("Enter genre_id to update: ");
-            string genreInput = view.GetInput();
-            if (!int.TryParse(genreInput, out int genreId))
-            {
-
-                view.DisplayMessage("IDs must be a number.\n");
-                Console.WriteLine("Continue? (enter)");
-
-
-                Console.ReadLine();
-                return;
-
-            }
-
-
-            view.DisplayMessage("Enter new genre name");
-            string genreName = view.GetInput();
-
-            int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
-
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
-
-            Console.WriteLine("Continue? (enter)");
-            Console.ReadLine();
-        }
-
+       
 
         private static void InsertNewGenre()
         {
@@ -984,6 +1232,60 @@ namespace vinylApp
             Console.ReadLine();
         }
 
+        private static void UpdateGenreName()
+        {
+            view.DisplayMessage("Enter genre_id to update: ");
+            string genreInput = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(genreInput) || !int.TryParse(genreInput, out int genreId))
+            {
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+            if (genreId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+
+            view.DisplayMessage("Enter new genre name: ");
+            string genreName = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(genreName))
+            {
+                view.DisplayMessage("Genre name can't be empty.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (genreName.Length > 50)
+            {
+                view.DisplayMessage("Genre name can only be up to 50 characters.");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            int rowsAffected = storageManager1.UpdateGenreName(genreId, genreName);
+
+            if (rowsAffected == -2)
+                view.DisplayMessage("Genre already exists! please try again.\n");
+            else if (rowsAffected == 0)
+                view.DisplayMessage("No rows updated (ID not found).\n");
+            else
+                view.DisplayMessage($"Rows affected: {rowsAffected}\n");
+
+            Console.WriteLine("Continue? (enter)");
+            Console.ReadLine();
+        }
+
+
 
         private static void DeleteGenreByName()
         {
@@ -1001,33 +1303,114 @@ namespace vinylApp
         {
             view.DisplayMessage("Enter customer ID to update: ");
             string custInput = view.GetInput();
-            if (!int.TryParse(custInput, out int customerId))
+
+            if (string.IsNullOrWhiteSpace(custInput) || !int.TryParse(custInput, out int customerId))
             {
                 view.DisplayMessage("IDs must be a number, please try again.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
+            if (customerId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
 
             view.DisplayMessage("Enter new first name: ");
-            string firstName = view.GetInput();
+            string firstName = view.GetInput().Trim();
 
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                view.DisplayMessage("First name cannot be blank.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (firstName.Length > 100)
+            {
+                view.DisplayMessage("First name cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter new last name: ");
-            string lastName = view.GetInput();
+            string lastName = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                view.DisplayMessage("Last name cannot be blank.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (lastName.Length > 100)
+            {
+                view.DisplayMessage("Last name cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
 
             view.DisplayMessage("Enter new email: ");
-            string email = view.GetInput();
+            string email = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                view.DisplayMessage("Email cannot be blank.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+            if (email.Length > 100)
+            {
+                view.DisplayMessage("Email cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            
 
             view.DisplayMessage("Enter new phone number: ");
-            string phoneNumber = view.GetInput();
+            string phoneNumber = view.GetInput().Trim();
+
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                view.DisplayMessage("Phone number cannot be blank.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+            if (phoneNumber.Length > 15)
+            {
+                view.DisplayMessage("Email cannot be more than 15 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
 
             int rowsAffected = storageManager1.UpdateCustomer(customerId, firstName, lastName, email, phoneNumber);
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            if (rowsAffected == -2)
+                view.DisplayMessage("A customer with this email/phone number already exists. Please try again.\n");
+            else if (rowsAffected == 0)
+                view.DisplayMessage("No rows updated (ID not found).\n");
+            else
+                view.DisplayMessage($"Rows affected: {rowsAffected}\n");
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
@@ -1055,6 +1438,15 @@ namespace vinylApp
                 return;
             }
 
+            if (firstName.Length > 100)
+            {
+                view.DisplayMessage("First name cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+
             view.DisplayMessage("Enter last name of new customer: ");
             string lastName = view.GetInput();
 
@@ -1065,6 +1457,15 @@ namespace vinylApp
                 Console.ReadLine();
                 return;
             }
+
+            if (lastName.Length > 100)
+            {
+                view.DisplayMessage("Last name cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
 
             if (!lastName.All(c => char.IsLetter(c) || c == ' ' || c == '\''))
             {
@@ -1085,9 +1486,18 @@ namespace vinylApp
                 return;
             }
 
+            if (email.Length > 100)
+            {
+                view.DisplayMessage("Email cannot be more than 100 characters.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+
             if (!email.Contains("@") || !email.Contains(".") || email.Length < 5)
             {
-                view.DisplayMessage("Invalid email. Please check if you've mistyped anything.\n");
+                view.DisplayMessage("Invalid email. Please check if you've mispelled anything.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -1158,23 +1568,55 @@ namespace vinylApp
         {
             view.DisplayMessage("Enter artist ID to update: ");
             string artistInput = view.GetInput();
-            if (!int.TryParse(artistInput, out int artistId))
+
+            if (string.IsNullOrWhiteSpace(artistInput) || !int.TryParse(artistInput, out int artistId))
             {
                 view.DisplayMessage("IDs must be a number.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
+            if (artistId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
 
             view.DisplayMessage("Enter new artist name: ");
             string newName = view.GetInput();
 
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                view.DisplayMessage("Artist name can't be empty.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+            if (newName.Length >100)
+            {
+                view.DisplayMessage("Artist name cannnot be more than 100 in length\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+
+
             int rowsAffected = storageManager1.UpdateArtistName(artistId, newName);
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            if (rowsAffected == -2)
+                view.DisplayMessage("This artist already exists.\n");
+            else if (rowsAffected == 0)
+                view.DisplayMessage("No rows updated (ID not found).\n");
+            else
+                view.DisplayMessage($"Rows affected: {rowsAffected}\n");
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
@@ -1299,12 +1741,18 @@ namespace vinylApp
                 return;
             }
 
-            view.DisplayMessage("Enter Artist ID: ");
-            string artistInput = view.GetInput();
-            int artistId;
-            if (!int.TryParse(artistInput, out artistId))
+            view.DisplayMessage("Enter artist ID: ");
+            string artistIdInput = view.GetInput();
+            if (string.IsNullOrWhiteSpace(artistIdInput) || !int.TryParse(artistIdInput, out int artistId))
             {
-                view.DisplayMessage("IDs must be a number\n");
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+            if (artistId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -1318,12 +1766,18 @@ namespace vinylApp
                 return;
             }
 
-            view.DisplayMessage("Enter Genre ID: ");
-            string genreInput = view.GetInput();
-            int genreId;
-            if (!int.TryParse(genreInput, out genreId))
+            view.DisplayMessage("Enter genre ID: ");
+            string genreIdInput = view.GetInput();
+            if (string.IsNullOrWhiteSpace(genreIdInput) || !int.TryParse(genreIdInput, out int genreId))
             {
-                view.DisplayMessage("IDs must be a number\n");
+                view.DisplayMessage("IDs must be a number.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                return;
+            }
+            if (genreId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -1366,32 +1820,36 @@ namespace vinylApp
             Console.ReadLine();
         }
 
+
+
+
+
         private static void UpdateRecordTitle()
         {
             view.DisplayMessage("Enter record ID to update: ");
-            string input = view.GetInput();
-            if (!int.TryParse(input, out int recordId))
+            string recInput = view.GetInput();
+
+            if (string.IsNullOrWhiteSpace(recInput) || !int.TryParse(recInput, out int recordId))
             {
                 view.DisplayMessage("IDs must be a number.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
-
-            if (!storageManager1.RecordExists(recordId))
+            if (recordId <= 0)
             {
-                view.DisplayMessage("Record with this ID doesn't exist.\n");
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
 
             view.DisplayMessage("Enter new record title: ");
-            string newTitle = view.GetInput().Trim();
+            string newTitle = view.GetInput();
 
             if (string.IsNullOrWhiteSpace(newTitle))
             {
-                view.DisplayMessage("Record title is required.\n");
+                view.DisplayMessage("Title can't be empty.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
@@ -1399,18 +1857,23 @@ namespace vinylApp
 
             if (newTitle.Length > 100)
             {
-                view.DisplayMessage("Record title can't be longer than 100 characters.\n");
+                view.DisplayMessage("Title cannot be over 100 characters long.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;
             }
 
             int rowsAffected = storageManager1.UpdateRecordTitle(recordId, newTitle);
-            view.DisplayMessage($"Rows affected: {rowsAffected}");
+
+            if (rowsAffected == 0)
+                view.DisplayMessage("No rows updated (ID not found).\n");
+            else
+                view.DisplayMessage($"Rows affected: {rowsAffected}\n");
 
             Console.WriteLine("Continue? (enter)");
             Console.ReadLine();
         }
+
 
 
 
@@ -1466,13 +1929,15 @@ namespace vinylApp
         private static void InsertNewOrder()
         {
             view.DisplayMessage("Enter customer ID for this order: ");
-            string customerInput = view.GetInput();
-            int customerId;
-            if (!int.TryParse(customerInput, out customerId))
+            string custInput2 = view.GetInput();
+            if (string.IsNullOrWhiteSpace(custInput2) || !int.TryParse(custInput2, out int customerId))
             {
-                view.DisplayMessage("IDs must be number\n");
-                Console.WriteLine("Continue? (enter)");
-                Console.ReadLine();
+                view.DisplayMessage("IDs must be a number.\n");
+                return;
+            }
+            if (customerId <= 0)
+            {
+                view.DisplayMessage("IDs must be a positive number (1 or higher).\n");
                 return;
             }
 
@@ -1480,9 +1945,9 @@ namespace vinylApp
             string input = view.GetInput();
 
             DateTime date;
-            if (!DateTime.TryParse(input, out date))
+            if (!DateTime.TryParse(input, out date) || date < new DateTime(1900, 1, 1) || date > new DateTime(2100, 12, 31))
             {
-                view.DisplayMessage("Invalid date format.\n");
+                view.DisplayMessage("Invalid date. Please enter a date between 1900-01-01 and 2100-12-31.\n");
                 Console.WriteLine("Continue? (enter)");
                 Console.ReadLine();
                 return;

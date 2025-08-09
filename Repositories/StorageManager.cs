@@ -27,6 +27,7 @@ namespace vinylApp.Repositories
                 Console.WriteLine("Connection successful");
                 Console.ResetColor();
 
+
             }
             catch (SqlException e)
             {
@@ -40,6 +41,46 @@ namespace vinylApp.Repositories
             }
         }
 
+        // normalizers (kind of late, but realized my updaters at this point still dont have trims or checks for duplicates/blanks and i dont wanna do it the hard way)
+        private static string Norm(string s) => (s ?? "").Trim();
+        private static string NormLower(string s) => (s ?? "").Trim().ToLower();
+
+
+        private bool GenreNameExistsOther(int genreId, string name)
+        {
+            using (var cmd = new SqlCommand(
+                "SELECT COUNT(*) FROM Genre WHERE LTRIM(RTRIM(Name)) = @Name AND GenreID <> @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", Norm(name));
+                cmd.Parameters.AddWithValue("@Id", genreId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        private bool ArtistNameExistsOther(int artistId, string name)
+        {
+            using (var cmd = new SqlCommand(
+                "SELECT COUNT(*) FROM Artist WHERE LTRIM(RTRIM(ArtistName)) = @Name AND ArtistID <> @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", NormLower(name));
+                cmd.Parameters.AddWithValue("@Id", artistId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        private bool CustomerEmailOrPhoneExistsOther(int customerId, string email, string phone)
+        {
+            using (var cmd = new SqlCommand(
+                @"SELECT COUNT(*) FROM Customer 
+          WHERE (LTRIM(RTRIM(Email)) = @Email OR LTRIM(RTRIM(PhoneNumber)) = @Phone)
+            AND CustomerID <> @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", Norm(email));
+                cmd.Parameters.AddWithValue("@Phone", Norm(phone));
+                cmd.Parameters.AddWithValue("@Id", customerId);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
 
 
         public List<Genre> GetAllGenres()
@@ -126,14 +167,19 @@ namespace vinylApp.Repositories
         //change an existing genre’s name, returns rows affected(0 or 1)
         public int UpdateGenreName(int genreId, string genreName)
         {
-            string sql = "UPDATE Genre SET Name = @GenreName WHERE GenreID = @GenreId";
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            var name = Norm(genreName);
+            if (string.IsNullOrEmpty(name)) return 0;            // reject blank
+            if (GenreNameExistsOther(genreId, name)) return -2;  // duplicate
+
+            using (var cmd = new SqlCommand(
+                "UPDATE Genre SET Name = @Name WHERE GenreID = @Id", conn))
             {
-                cmd.Parameters.AddWithValue("@GenreName", genreName);
-                cmd.Parameters.AddWithValue("@GenreId", genreId);
+                cmd.Parameters.AddWithValue("@Name", name);
+                cmd.Parameters.AddWithValue("@Id", genreId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
         public int InsertGenre(Genre genreTemp)
         {
@@ -310,21 +356,32 @@ namespace vinylApp.Repositories
 
         public int UpdateCustomer(int customerId, string firstName, string lastName, string email, string phoneNumber)
         {
-            string sql = @"UPDATE Customer 
-                   SET FirstName = @FirstName, LastName = @LastName, 
-                       Email = @Email, PhoneNumber = @PhoneNumber 
-                   WHERE CustomerID = @CustomerId";
+            var f = Norm(firstName);
+            var l = Norm(lastName);
+            var e = Norm(email);
+            var p = Norm(phoneNumber);
 
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            if (string.IsNullOrEmpty(f) || string.IsNullOrEmpty(l) ||
+                string.IsNullOrEmpty(e) || string.IsNullOrEmpty(p))
+                return 0;                          // no blanks allowed
+
+            if (CustomerEmailOrPhoneExistsOther(customerId, e, p))
+                return -2;                         // duplicate email/phone on another row
+
+            using (var cmd = new SqlCommand(
+                @"UPDATE Customer 
+          SET FirstName=@FirstName, LastName=@LastName, Email=@Email, PhoneNumber=@PhoneNumber 
+          WHERE CustomerID=@CustomerId", conn))
             {
-                cmd.Parameters.AddWithValue("@FirstName", firstName);
-                cmd.Parameters.AddWithValue("@LastName", lastName);
-                cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+                cmd.Parameters.AddWithValue("@FirstName", f);
+                cmd.Parameters.AddWithValue("@LastName", l);
+                cmd.Parameters.AddWithValue("@Email", e);
+                cmd.Parameters.AddWithValue("@PhoneNumber", p);
                 cmd.Parameters.AddWithValue("@CustomerId", customerId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
 
 
@@ -540,13 +597,19 @@ namespace vinylApp.Repositories
 
         public int UpdateArtistName(int artistId, string newName)
         {
-            using (SqlCommand cmd = new SqlCommand("UPDATE Artist SET ArtistName = @Name WHERE ArtistID = @Id", conn))
+            var name = NormLower(newName);
+            if (string.IsNullOrEmpty(name)) return 0;              // reject blank
+            if (ArtistNameExistsOther(artistId, name)) return -2;  // duplicate
+
+            using (var cmd = new SqlCommand(
+                "UPDATE Artist SET ArtistName = @Name WHERE ArtistID = @Id", conn))
             {
-                cmd.Parameters.AddWithValue("@Name", newName);
+                cmd.Parameters.AddWithValue("@Name", name);
                 cmd.Parameters.AddWithValue("@Id", artistId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
 
 
@@ -800,13 +863,18 @@ namespace vinylApp.Repositories
 
         public int UpdateRecordTitle(int recordId, string newTitle)
         {
-            using (SqlCommand cmd = new SqlCommand("UPDATE Record SET Title = @Title WHERE RecordID = @Id", conn))
+            var title = Norm(newTitle);
+            if (string.IsNullOrEmpty(title)) return 0;  // reject blank
+
+            using (var cmd = new SqlCommand(
+                "UPDATE Record SET Title = @Title WHERE RecordID = @Id", conn))
             {
-                cmd.Parameters.AddWithValue("@Title", newTitle);
+                cmd.Parameters.AddWithValue("@Title", title);
                 cmd.Parameters.AddWithValue("@Id", recordId);
                 return cmd.ExecuteNonQuery();
             }
         }
+
 
 
         public List<Record> SortRecordsByTitle()
@@ -831,21 +899,39 @@ namespace vinylApp.Repositories
         public List<Record> SortRecordsByYear()
         {
             var records = new List<Record>();
-            string sql = "SELECT * FROM Record ORDER BY ReleaseYear ASC";
-            using var cmd = new SqlCommand(sql, conn);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+
+            string sql = @"
+        SELECT Record.RecordID, Record.Title, Record.ReleaseYear,
+               Record.ArtistID, Record.GenreID,
+               Artist.ArtistName AS ArtistName,
+               Genre.Name AS GenreName
+        FROM Record
+        INNER JOIN Artist ON Record.ArtistID = Artist.ArtistID
+        INNER JOIN Genre  ON Record.GenreID = Genre.GenreID
+        ORDER BY Record.ReleaseYear ASC, Record.Title ASC;";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                records.Add(new Record(
-                    Convert.ToInt32(reader["RecordID"]),
-                    reader["Title"].ToString(),
-                    Convert.ToInt32(reader["ReleaseYear"]),
-                    Convert.ToInt32(reader["ArtistID"]),
-                    Convert.ToInt32(reader["GenreID"])
-                ));
+                while (reader.Read())
+                {
+                    var r = new Record
+                    {
+                        RecordID = Convert.ToInt32(reader["RecordID"]),
+                        Title = reader["Title"].ToString(),
+                        ReleaseYear = Convert.ToInt32(reader["ReleaseYear"]),
+                        ArtistID = Convert.ToInt32(reader["ArtistID"]),
+                        GenreID = Convert.ToInt32(reader["GenreID"]),
+                        ArtistName = reader["ArtistName"].ToString(),
+                        GenreName = reader["GenreName"].ToString()
+                    };
+                    records.Add(r);
+                }
             }
+
             return records;
         }
+
 
 
         public List<Record> GetRecordsByYearRange(int startYear, int endYear)
@@ -1152,6 +1238,26 @@ public bool CheckLogin(string user, string pass])
                 (DateTime)reader["OrderDate"],
                 reader["Status"].ToString()
             );
+        }
+
+
+
+
+        //for t1 reports menu
+
+        //  report runner (no parameters)
+        public SqlDataReader RunReport(string sql)
+        {
+            var cmd = new SqlCommand(sql, conn);
+            return cmd.ExecuteReader(); // caller must Close() the reader
+        }
+
+        //  report runner with parameters
+        public SqlDataReader RunReport(string sql, Action<SqlParameterCollection> bind)
+        {
+            var cmd = new SqlCommand(sql, conn);
+            bind?.Invoke(cmd.Parameters);
+            return cmd.ExecuteReader(); 
         }
 
 
