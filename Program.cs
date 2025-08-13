@@ -23,7 +23,8 @@ namespace vinylApp
             //keeps user updated/informed on system status while VinylVault is loading
             Console.WriteLine("Connecting to VinylVault... may take a while, please be patient.");
             string mdfPath = Path.Combine(AppContext.BaseDirectory, "vinylVault.mdf");
-            string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""C:\Users\vgkel\Downloads\VKPROJ 1 1 (3) 1\VinylVaultApplicationSol\VinylVaultApplicationSol\VinylVaultApplicationSol\vinylApp (1)\vinylVault.mdf"";Integrated Security=True;Connect Timeout=30";
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\vinylVault.mdf;Integrated Security=True";
+
 
             //storagemanager is the one class that manages all SQL operations, so it is the one that connects to the database
             //it is also the one that is used to access all other classes, so it is the one that is instantiated first
@@ -784,6 +785,14 @@ namespace vinylApp
                 Console.ReadLine();
                 return;
             }
+            if (username.Contains("$") || username.Contains("%") || username.Contains("^") || password.Contains("$") || password.Contains("%") || password.Contains("^"))
+            {
+                view.DisplayMessage("Usernames/password can't include funny characters like $%^. Please try again.\n");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                Console.Clear();
+                return;
+            }
 
             string role = "Customer";
 
@@ -1148,52 +1157,90 @@ namespace vinylApp
 
         private static void CreateUser()
         {
-            view.DisplayMessage("Enter a new username: ");
-            string username = view.GetInput().Trim();
-
-            view.DisplayMessage("Enter a password: ");
-            string password = view.GetInput().Trim();
-
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            while (true)
             {
-                view.DisplayMessage("Your username and password can't be empty, please try again.\n");
-                return;
+                // username
+                view.DisplayMessage("Enter a new username: ");
+                string username = (view.GetInput() ?? "").Trim();
+
+                // password (masked)
+                view.DisplayMessage("Enter a password: ");
+                string password = (view.GetInput2() ?? "").Trim();
+
+                // empty checks
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                {
+                    view.DisplayMessage("Your username and password can't be empty, please try again.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    Console.Clear();
+                    break;
+                }
+
+              
+                if (username.Length >= 100)
+                {
+                    view.DisplayMessage("Boundary error: you may only have a username with up to *100* characters. Please try again.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    Console.Clear();
+
+                    break;
+                }
+                if (password.Length >= 100)
+                {
+                    view.DisplayMessage("Boundary error: you may only have a password with up to *100* characters. Please try again.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    Console.Clear();
+
+                    break;
+                }
+
+              
+                if (storageManager1.UsernameExists(username))
+                {
+                    view.DisplayMessage("Username is already taken, please try again.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    Console.Clear();
+
+                    break;
+                }
+
+                if (username.Contains("$") || username.Contains("%") || username.Contains("^") ||password.Contains("$") || password.Contains("%") || password.Contains("^"))
+                {
+     view.DisplayMessage("Usernames/password can't include funny characters like $%^. Please try again.\n");
+                    Console.WriteLine("Continue? (enter)");
+                    Console.ReadLine();
+                    Console.Clear();
+                    break;
+                }
+
+
+
+                string role = "Customer";
+                view.DisplayMessage("Is this an admin account? (yes or no): ");
+                string ans = (view.GetInput() ?? "").Trim().ToLower();
+                if (ans == "yes" || ans == "y")
+                    role = "Admin";
+
+               
+                User newUser = new User(0, username, password, role);
+                int newId = storageManager1.InsertUser(newUser);
+
+                Console.WriteLine($"Account created successfully. ID: {newId}");
+                Console.WriteLine("Continue? (enter)");
+                Console.ReadLine();
+                break; 
             }
-
-            if (username.Length >= 100)
-            {
-                view.DisplayMessage("Boundary error: username must be less than 100 characters.\n");
-                return;
-            }
-
-            if (password.Length >= 100)
-            {
-                view.DisplayMessage("Boundary error: password must be less than 100 characters.\n");
-                return;
-            }
-
-            if (storageManager1.UsernameExists(username))
-            {
-                view.DisplayMessage("Username is already taken, please try again.\n");
-                return;
-            }
-
-            view.DisplayMessage("Make this account admin? (y/n):");
-            string ans = view.GetInput().Trim().ToLower();
-            string role = (ans == "y" || ans == "yes") ? "Admin" : "Customer";
-
-            User newUser = new User(0, username, password, role);
-            int newId = storageManager1.InsertUser(newUser);
-
-            Console.WriteLine($"User created successfully. ID: {newId}");
-            Console.WriteLine("Continue? (enter)");
-            Console.ReadLine();
         }
 
 
 
 
-       
+
+
 
         private static void InsertNewGenre()
         {
